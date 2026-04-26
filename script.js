@@ -10,7 +10,7 @@ var userLocationData = {
 // 1. DETECTAR UBICACIÓN
 async function detectLocation() {
   try {
-    const res = await fetch('https://freeipapi.com/api/json');
+    const res = await fetch('/api/location');
     const data = await res.json();
     if (data.cityName) {
       userLocationData = {
@@ -21,6 +21,7 @@ async function detectLocation() {
       document.getElementById('userCity').textContent = data.cityName + ', ' + data.countryCode;
     }
   } catch (err) {
+    console.error('Error detectando ubicación:', err);
     document.getElementById('userCity').textContent = 'Ubicación local';
   }
 }
@@ -93,7 +94,7 @@ async function doSearch(query) {
   const locationParam = userLocationData.city ? `${userLocationData.city}, ${userLocationData.country_name}` : userLocationData.country_name;
   
   // Llamamos a nuestro propio backend en Vercel
-  const targetUrl = `/api/search?q=${encodeURIComponent(query)}&location=${encodeURIComponent(locationParam)}&hl=es&gl=${userLocationData.country_code.toLowerCase()}&sort_by=pd`;
+  const targetUrl = `/api/search?q=${encodeURIComponent(query)}&location=${encodeURIComponent(locationParam)}&hl=es&gl=${userLocationData.country_code.toLowerCase()}&sort_by=p`;
 
   try {
     const res = await fetch(targetUrl);

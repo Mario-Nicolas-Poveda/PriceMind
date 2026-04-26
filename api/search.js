@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     location: location || 'Colombia',
     hl: hl || 'es',
     gl: gl || 'co',
-    sort_by: sort_by || 'pd',
+    sort_by: sort_by || 'p',
     api_key: SERPAPI_KEY
   });
 
