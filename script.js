@@ -228,3 +228,20 @@ window.addEventListener('DOMContentLoaded', () => {
     };
   }
 });
+
+function executePurchase() {
+  const overlay = document.getElementById('successOverlay');
+  if(!overlay) return;
+  overlay.style.display = 'flex';
+  
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    closeAnalytics();
+    // Volver al inicio (limpiar búsqueda)
+    document.getElementById('productInput').value = '';
+    document.getElementById('productsGrid').innerHTML = '';
+    document.getElementById('placeholder').style.display = 'flex';
+    document.getElementById('resultsStatus').textContent = 'Esperando búsqueda...';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 2500);
+}
