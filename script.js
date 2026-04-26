@@ -1,4 +1,4 @@
-﻿// --- CONFIGURACIÓN ---
+// --- CONFIGURACIÓN ---
 var currentQuery = '';
 var userLocationData = { city: '', country_name: 'Colombia', country_code: 'CO' };
 
@@ -21,7 +21,8 @@ async function detectLocation() {
     const data = await res.json();
     if (data.cityName) {
       userLocationData = { city: data.cityName, country_name: data.countryName, country_code: data.countryCode };
-      if(document.getElementById('userCity')) document.getElementById('userCity').textContent = data.cityName + ', ' + data.countryCode;
+      const el = document.getElementById('userCity');
+      if(el) el.textContent = data.cityName + ', ' + data.countryCode;
     }
   } catch (e) { console.log("Error detectando ubicación"); }
 }
@@ -57,16 +58,16 @@ function renderProducts(items, query) {
 
 function createProductCard(item) {
   const itemData = encodeURIComponent(JSON.stringify(item));
-  return 
-    <div class="product-card" onclick="openAnalytics('')">
-      <img class="product-img" src="" alt="">
+  return `
+    <div class="product-card" onclick="openAnalytics('${itemData}')">
+      <img class="product-img" src="${item.thumbnail}" alt="${item.title}">
       <div class="product-info">
-        <div class="product-store"></div>
-        <div class="product-title"></div>
-        <div class="product-price"></div>
+        <div class="product-store">${item.source || 'Tienda'}</div>
+        <div class="product-title">${item.title}</div>
+        <div class="product-price">${item.price}</div>
         <div style="margin-top:10px; font-size:0.65rem; color:var(--blue-mid); font-weight:700;">VER TENDENCIA 📈</div>
       </div>
-    </div>;
+    </div>`;
 }
 
 async function doSearch(query) {
@@ -80,8 +81,8 @@ async function doSearch(query) {
     renderProducts(data.shopping_results || [], query);
   } catch (e) {
     hideLoader();
-    const grid = document.getElementById('productsGrid');
-    if(grid) grid.innerHTML = '<div class="error-box"><p>Error de conexión.</p></div>';
+    const g = document.getElementById('productsGrid');
+    if(g) g.innerHTML = '<div class="error-box"><p>Error de conexión.</p></div>';
   }
 }
 
@@ -100,18 +101,19 @@ function populateFeed() {
   if(grid) {
     grid.innerHTML = recoItems.map(item => {
       const itemData = encodeURIComponent(JSON.stringify(item));
-      return 
-        <div class="reco-card" onclick="openAnalytics('')">
-          <img src="" class="reco-img">
+      return `
+        <div class="reco-card" onclick="openAnalytics('${itemData}')">
+          <img src="${item.thumbnail}" class="reco-img">
           <div class="reco-info">
-            <div class="reco-name"></div>
-            <div class="reco-new-price"></div>
+            <div class="reco-name">${item.title}</div>
+            <div class="reco-new-price">${formatPrice((item.extracted_price || 100000) * 0.88)}</div>
             <div style="font-size:0.6rem; color:var(--blue-mid); margin-top:5px; font-weight:700;">VER ANALÍTICA 📈</div>
           </div>
         </div>
-      ;
+      `;
     }).join('');
-    document.getElementById('recoSection').style.display = 'block';
+    const sect = document.getElementById('recoSection');
+    if(sect) sect.style.display = 'block';
   }
   
   const disc = document.getElementById('discoveryGrid');
@@ -123,26 +125,26 @@ function populateFeed() {
 function openAnalytics(encodedData) {
   const product = JSON.parse(decodeURIComponent(encodedData));
   const modal = document.getElementById('analyticsModal');
+  if(!modal) return;
+  
   document.getElementById('anaImg').src = product.thumbnail;
   document.getElementById('anaTitle').textContent = product.title;
   document.getElementById('anaPrice').textContent = product.price;
   document.getElementById('anaStore').textContent = product.source || 'Tienda Oficial';
   
   const gallery = document.getElementById('anaGallery');
-  let images = [product.thumbnail];
-  
-  if (product.images && Array.isArray(product.images)) {
-    images = [...images, ...product.images].slice(0, 3);
-  } else if (product.related_images && Array.isArray(product.related_images)) {
-    images = [...images, ...product.related_images.map(img => img.link)].slice(0, 3);
-  }
-  
-  if (images.length > 1) {
-    gallery.innerHTML = images.map(img => '<img src="' + img + '" class="gallery-thumb" onclick="document.getElementById(\'anaImg\').src=\'' + img + '\'">').join('');
-    gallery.style.display = 'flex';
-  } else {
-    gallery.innerHTML = '';
-    gallery.style.display = 'none';
+  if(gallery) {
+    let images = [product.thumbnail];
+    if (product.images && Array.isArray(product.images)) images = [...images, ...product.images].slice(0, 3);
+    else if (product.related_images && Array.isArray(product.related_images)) images = [...images, ...product.related_images.map(img => img.link)].slice(0, 3);
+    
+    if (images.length > 1) {
+      gallery.innerHTML = images.map(img => `<img src="${img}" class="gallery-thumb" onclick="document.getElementById('anaImg').src='${img}'">`).join('');
+      gallery.style.display = 'flex';
+    } else {
+      gallery.innerHTML = '';
+      gallery.style.display = 'none';
+    }
   }
 
   const price = product.extracted_price || 100000;
@@ -170,13 +172,13 @@ function updateChart(period) {
   const width = 500;
   const height = 200;
 
-  xAxis.innerHTML = labels.map(l => '<span>' + l + '</span>').join('');
+  xAxis.innerHTML = labels.map(l => `<span>${l}</span>`).join('');
   dataPoints.innerHTML = '';
 
   for (let i = 0; i < pointsCount; i++) {
     const x = (i / (pointsCount - 1)) * width;
     const y = 40 + Math.random() * (height - 80);
-    points.push({x: x, y: y});
+    points.push({x, y});
 
     const dot = document.createElement('div');
     dot.className = 'chart-data-point';
@@ -199,8 +201,8 @@ function updateChart(period) {
 }
 
 function closeAnalytics() { 
-  const modal = document.getElementById('analyticsModal');
-  if(modal) modal.style.display = 'none'; 
+  const m = document.getElementById('analyticsModal');
+  if(m) m.style.display = 'none'; 
 }
 
 function formatPrice(v) { 
