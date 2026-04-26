@@ -258,3 +258,46 @@ function executePurchase() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 2500);
 }
+
+function createConfetti() {
+  const container = document.getElementById('confetti');
+  if(!container) return;
+  container.innerHTML = '';
+  const colors = ['#ffd700', '#10b981', '#2563eb', '#f472b6', '#34d399'];
+  for(let i=0; i<50; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDelay = Math.random() * 2 + 's';
+    p.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+    container.appendChild(p);
+  }
+}
+
+// Sobrescribimos executePurchase con las mejoras
+function executePurchase() {
+  const overlay = document.getElementById('successOverlay');
+  if(!overlay) return;
+  
+  // Generar ID de orden y ahorro aleatorio
+  document.getElementById('orderId').textContent = '#PM-' + Math.floor(10000 + Math.random() * 90000);
+  document.getElementById('orderSaving').textContent = formatPrice(Math.floor(20000 + Math.random() * 80000));
+  
+  overlay.style.display = 'flex';
+  createConfetti();
+  
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    closeAnalytics();
+    const input = document.getElementById('productInput');
+    if(input) input.value = '';
+    const grid = document.getElementById('productsGrid');
+    if(grid) grid.innerHTML = '';
+    const placeholder = document.getElementById('placeholder');
+    if(placeholder) placeholder.style.display = 'flex';
+    const status = document.getElementById('resultsStatus');
+    if(status) status.textContent = 'Esperando búsqueda...';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 4500); // 4.5 segundos para disfrutar la victoria
+}

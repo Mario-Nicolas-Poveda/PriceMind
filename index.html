@@ -182,12 +182,31 @@
         </div>
       </div>
 
-      <!-- Pantalla de Éxito -->
+      <!-- Pantalla de Éxito Premium -->
       <div id="successOverlay" class="success-overlay">
+        <div class="confetti-container" id="confetti"></div>
         <div class="success-content">
-          <div class="success-icon">✓</div>
-          <h2>¡Compra Exitosa!</h2>
-          <p>Tu pedido ha sido procesado correctamente.</p>
+          <div class="success-icon-wrap">
+            <div class="success-icon">✓</div>
+            <div class="success-pulse"></div>
+          </div>
+          <h2 class="animate-text">¡Excelente Elección!</h2>
+          <p class="animate-text-slow">Tu pedido ha sido procesado con éxito.</p>
+          
+          <div class="order-details-card">
+            <div class="order-row">
+              <span class="order-label">ID de Orden:</span>
+              <span class="order-value" id="orderId">#PM-72410</span>
+            </div>
+            <div class="order-row saving-row">
+              <span class="order-label">Ahorro Logrado:</span>
+              <span class="order-value" id="orderSaving">$ 45.000 COP</span>
+            </div>
+          </div>
+          
+          <div class="success-footer">
+            Regresando al inicio en unos segundos...
+          </div>
         </div>
       </div>
 
