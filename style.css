@@ -187,7 +187,7 @@ footer strong{color:rgba(255,255,255,.8)}
 }
 
 .reco-container { 
-  max-width: 760px; 
+  max-width: 1300px; /* Más ancho para que quepan las 3 en fila */
   margin: -40px auto 60px; 
   padding: 0 20px; 
   position: relative; 
@@ -228,8 +228,11 @@ footer strong{color:rgba(255,255,255,.8)}
 
 .reco-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr); /* Forzamos 3 columnas */
+  gap: 1.25rem;
+}
+@media (max-width: 900px) {
+  .reco-grid { grid-template-columns: 1fr; } /* En móvil vuelven a ser lista */
 }
 
 .reco-card {
@@ -253,9 +256,22 @@ footer strong{color:rgba(255,255,255,.8)}
 .reco-old-price { font-size: 0.65rem; color: var(--gray-500); text-decoration: line-through; }
 .reco-save-label { color: var(--green); font-size: 0.6rem; font-weight: 700; margin-top: 2px; }
 
-/* Discovery Section */
+/* Discovery Section - ANCHO TOTAL */
 .discovery-section {
-  margin-top: 4rem;
+  margin-top: 5rem;
+  padding: 4rem 2rem;
+  background: white;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  border-top: 1px solid var(--gray-100);
+}
+.discovery-content {
+  max-width: 1300px;
+  margin: 0 auto;
 }
 .discovery-header {
   margin-bottom: 1.5rem;
