@@ -94,7 +94,7 @@ async function doSearch(query) {
   const locationParam = userLocationData.city ? `${userLocationData.city}, ${userLocationData.country_name}` : userLocationData.country_name;
   
   // Llamamos a nuestro propio backend en Vercel
-  const targetUrl = `/api/search?q=${encodeURIComponent(query)}&location=${encodeURIComponent(locationParam)}&hl=es&gl=${userLocationData.country_code.toLowerCase()}&sort_by=p`;
+  const targetUrl = `/api/search?q=${encodeURIComponent(query)}&location=${encodeURIComponent(locationParam)}&hl=es&gl=${userLocationData.country_code.toLowerCase()}`;
 
   try {
     const res = await fetch(targetUrl);
