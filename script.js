@@ -123,6 +123,15 @@ function openAnalytics(encodedData) {
   document.getElementById('anaPrice').textContent = product.price;
   document.getElementById('anaStore').textContent = product.source || 'Tienda Oficial';
   
+  // Galería de 3 Imágenes
+  const gallery = document.getElementById('anaGallery');
+  const images = [
+    product.thumbnail,
+    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop", // Placeholder 1
+    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop"  // Placeholder 2
+  ];
+  gallery.innerHTML = images.map(img => `<img src="${img}" class="gallery-thumb" onclick="document.getElementById('anaImg').src='${img}'">`).join('');
+
   const price = product.extracted_price || 100000;
   document.getElementById('minPrice').textContent = formatPrice(price * 0.85);
   document.getElementById('avgPrice').textContent = formatPrice(price * 1.05);
