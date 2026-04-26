@@ -6,10 +6,14 @@ var userLocationData = { city: '', country_name: 'Colombia', country_code: 'CO' 
 const MOCK_PRODUCTS = [
   { title: "Apple iPhone 15 Pro Max 256GB", price: "$ 5.499.000", extracted_price: 5499000, thumbnail: "https://images.unsplash.com/photo-1696446701796-da61225697cc?w=400&h=400&fit=crop", source: "Mercado Libre" },
   { title: "Sony PlayStation 5 Slim 1TB", price: "$ 2.450.000", extracted_price: 2450000, thumbnail: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=400&fit=crop", source: "Amazon" },
-  { title: "AirPods Pro (2.ª generación)", price: "$ 980.000", extracted_price: 980000, thumbnail: "https://images.unsplash.com/photo-1588423770574-91993ca0a85a?w=400&h=400&fit=crop", source: "Éxito" },
+  { title: "AirPods Pro (2.ª generación)", price: "$ 980.000", extracted_price: 980000, thumbnail: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop", source: "Éxito" },
   { title: "Samsung Galaxy S24 Ultra", price: "$ 4.890.000", extracted_price: 4890000, thumbnail: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&h=400&fit=crop", source: "Alkosto" },
   { title: "Monitor Gamer Odyssey G5 27\"", price: "$ 1.150.000", extracted_price: 1150000, thumbnail: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=400&fit=crop", source: "Mercado Libre" },
-  { title: "Cafetera Nespresso Vertuo Pop", price: "$ 450.000", extracted_price: 450000, thumbnail: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=400&fit=crop", source: "Falabella" }
+  { title: "Cafetera Nespresso Vertuo Pop", price: "$ 450.000", extracted_price: 450000, thumbnail: "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=400&h=400&fit=crop", source: "Falabella" },
+  { title: "Nintendo Switch OLED Model", price: "$ 1.650.000", extracted_price: 1650000, thumbnail: "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?w=400&h=400&fit=crop", source: "Amazon" },
+  { title: "iPad Air M2 12.9\"", price: "$ 3.200.000", extracted_price: 3200000, thumbnail: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop", source: "Mercado Libre" },
+  { title: "Apple Watch Series 9", price: "$ 1.850.000", extracted_price: 1850000, thumbnail: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&h=400&fit=crop", source: "Éxito" },
+  { title: "MacBook Air M3 13\"", price: "$ 5.800.000", extracted_price: 5800000, thumbnail: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop", source: "Falabella" }
 ];
 
 // 1. DETECTAR UBICACIÓN
