@@ -234,22 +234,24 @@ footer strong{color:rgba(255,255,255,.8)}
 
 .reco-card {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
   background: var(--gray-50);
-  padding: 1rem;
+  padding: 0.75rem;
   border-radius: 18px;
   border: 1px solid var(--gray-100);
-  transition: transform 0.2s;
+  transition: all 0.2s;
   cursor: pointer;
 }
-.reco-card:hover { transform: translateY(-3px); border-color: var(--blue-mid); }
-.reco-img { width: 100%; height: 100px; object-fit: contain; background: white; border-radius: 12px; padding: 5px; margin-bottom: 10px; }
+.reco-card:hover { transform: scale(1.02); border-color: var(--blue-mid); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.reco-img { width: 70px; height: 70px; min-width: 70px; object-fit: contain; background: white; border-radius: 12px; padding: 5px; }
 .reco-info { flex: 1; }
-.reco-name { font-size: 0.8rem; font-weight: 600; color: var(--gray-700); margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.reco-price-row { display: flex; flex-direction: column; gap: 2px; }
-.reco-new-price { font-family: 'Sora', sans-serif; font-weight: 800; color: var(--blue-mid); font-size: 1rem; }
-.reco-old-price { font-size: 0.7rem; color: var(--gray-500); text-decoration: line-through; }
-.reco-save-label { color: var(--green); font-size: 0.65rem; font-weight: 700; margin-top: 5px; }
+.reco-name { font-size: 0.75rem; font-weight: 700; color: var(--gray-700); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.reco-price-row { display: flex; flex-direction: column; }
+.reco-new-price { font-weight: 800; color: var(--blue-mid); font-size: 0.9rem; }
+.reco-old-price { font-size: 0.65rem; color: var(--gray-500); text-decoration: line-through; }
+.reco-save-label { color: var(--green); font-size: 0.6rem; font-weight: 700; margin-top: 2px; }
 
 /* Discovery Section */
 .discovery-section {

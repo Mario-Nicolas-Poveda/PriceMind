@@ -176,7 +176,16 @@ function formatPrice(v) { return new Intl.NumberFormat('es-CO', { style:'currenc
 // --- PERSISTENCIA Y RECOMENDACIONES (FEED) ---
 function saveToHistory(product) {
   let hist = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-  hist = [product, ...hist.filter(p => p.title !== product.title)].slice(0, 6);
+  // Unificamos a 'thumbnail' para que coincida con MOCK_PRODUCTS
+  const historyItem = {
+    title: product.title,
+    price: product.price,
+    extracted_price: product.extracted_price,
+    thumbnail: product.thumbnail,
+    source: product.source,
+    timestamp: Date.now()
+  };
+  hist = [historyItem, ...hist.filter(p => p.title !== product.title)].slice(0, 6);
   localStorage.setItem('searchHistory', JSON.stringify(hist));
 }
 
@@ -190,19 +199,24 @@ function populateFeed() {
   if(recoGrid) {
     recoGrid.innerHTML = recoItems.map(item => {
       const discount = 0.12;
-      const discountedPrice = formatPrice((item.extracted_price || 100000) * (1 - discount));
-      return `
-        <div class="reco-card" onclick="doSearch('${item.title.replace(/'/g, "\\'")}')">
-          <img src="${item.thumbnail}" class="reco-img">
-          <div class="reco-info">
-            <div class="reco-name">${item.title}</div>
-            <div class="reco-price-row">
-              <span class="reco-new-price">${discountedPrice}</span>
-              <span class="reco-old-price">${item.price}</span>
-              <span class="reco-save-label">¡Bajó un 12%!</span>
-            </div>
+      const newPriceFormatted = formatPrice((item.extracted_price || 100000) * (1 - discount));
+      const recoCard = document.createElement('div');
+      recoCard.className = 'reco-card';
+      recoCard.style.display = 'flex';
+      recoCard.style.flexDirection = 'row';
+      recoCard.innerHTML = `
+        <img src="${item.thumbnail || item.image || ''}" class="reco-img" alt="${item.title}">
+        <div class="reco-info">
+          <div class="reco-name">${item.title}</div>
+          <div class="reco-price-row">
+            <span class="reco-new-price">${newPriceFormatted}</span>
+            <span class="reco-old-price">${item.price}</span>
+            <span class="reco-save-label">¡Baja de precio!</span>
           </div>
-        </div>`;
+        </div>
+      `;
+      // Quitamos el botón de adentro para que toda la tarjeta sea el botón (más limpio)
+      return recoCard.outerHTML;
     }).join('');
     document.getElementById('recoSection').style.display = 'block';
   }
