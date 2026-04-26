@@ -17,33 +17,39 @@ async function detectLocation() {
           country_name: data.countryName,
           country_code: data.countryCode
       };
-      document.getElementById('userCity').textContent = data.cityName + ', ' + data.countryCode;
+      const label = document.getElementById('userCity');
+      if(label) label.textContent = data.cityName + ', ' + data.countryCode;
     }
   } catch (err) {
     console.error('Error detectando ubicación:', err);
-    document.getElementById('userCity').textContent = 'Ubicación local';
+    const label = document.getElementById('userCity');
+    if(label) label.textContent = 'Ubicación local';
   }
 }
 
 function showLoader() {
-  document.getElementById('placeholder').style.display = 'none';
-  document.getElementById('loader').style.display = 'flex';
-  document.getElementById('productsGrid').innerHTML = '';
+  const p = document.getElementById('placeholder');
+  const l = document.getElementById('loader');
+  const g = document.getElementById('productsGrid');
+  if(p) p.style.display = 'none';
+  if(l) l.style.display = 'flex';
+  if(g) g.innerHTML = '';
 }
 
 function hideLoader() {
-  document.getElementById('loader').style.display = 'none';
+  const l = document.getElementById('loader');
+  if(l) l.style.display = 'none';
 }
 
 // 2. RENDERIZAR RESULTADOS
 function renderProducts(items, query) {
   hideLoader();
-  var grid = document.getElementById('productsGrid');
-  var status = document.getElementById('resultsStatus');
+  const grid = document.getElementById('productsGrid');
+  const status = document.getElementById('resultsStatus');
 
   if (!items || items.length === 0) {
-    grid.innerHTML = `<div class="error-box"><p>No se encontraron resultados para "${query}".</p></div>`;
-    status.textContent = 'Sin resultados';
+    if(grid) grid.innerHTML = `<div class="error-box"><p>No se encontraron resultados para "${query}".</p></div>`;
+    if(status) status.textContent = 'Sin resultados';
     return;
   }
 
@@ -64,16 +70,16 @@ function renderProducts(items, query) {
 
   filteredItems.sort((a, b) => (a.extracted_price || 0) - (b.extracted_price || 0));
 
-  status.textContent = filteredItems.length + ' ofertas encontradas';
-  var html = '<div class="products-grid">';
+  if(status) status.textContent = filteredItems.length + ' ofertas encontradas';
+  let html = '<div class="products-grid">';
 
-  for (var i = 0; i < filteredItems.length; i++) {
-    var item = filteredItems[i];
-    var title = item.title || '';
-    var price = item.price || '';
-    var store = item.source || 'Tienda';
-    var img = item.thumbnail || '';
-    var delivery = item.delivery || '';
+  for (let i = 0; i < filteredItems.length; i++) {
+    const item = filteredItems[i];
+    const title = item.title || '';
+    const price = item.price || '';
+    const store = item.source || 'Tienda';
+    const img = item.thumbnail || '';
+    const delivery = item.delivery || '';
     
     const itemData = encodeURIComponent(JSON.stringify(item));
 
@@ -90,15 +96,17 @@ function renderProducts(items, query) {
       </div>`;
   }
   html += '</div>';
-  grid.innerHTML = html;
+  if(grid) grid.innerHTML = html;
 }
 
 // 3. REALIZAR BÚSQUEDA
 async function doSearch(query) {
   if (!query) return;
+  console.log("Iniciando búsqueda para:", query);
   currentQuery = query;
   showLoader();
-  document.getElementById('resultsStatus').textContent = 'Analizando ofertas...';
+  const status = document.getElementById('resultsStatus');
+  if(status) status.textContent = 'Analizando ofertas...';
 
   const locationParam = userLocationData.city ? `${userLocationData.city}, ${userLocationData.country_name}` : userLocationData.country_name;
   const targetUrl = `/api/search?q=${encodeURIComponent(query)}&location=${encodeURIComponent(locationParam)}&hl=es&gl=${userLocationData.country_code.toLowerCase()}`;
@@ -116,13 +124,15 @@ async function doSearch(query) {
   } catch (err) {
     console.error('Error en búsqueda:', err);
     hideLoader();
-    document.getElementById('productsGrid').innerHTML = `<div class="error-box"><p>Error: ${err.message}</p></div>`;
+    const g = document.getElementById('productsGrid');
+    if(g) g.innerHTML = `<div class="error-box"><p>Error: ${err.message}</p></div>`;
   }
 }
 
 function searchProduct() {
-  var inputEl = document.getElementById('productInput');
-  var q = inputEl.value.trim();
+  const inputEl = document.getElementById('productInput');
+  if(!inputEl) return;
+  const q = inputEl.value.trim();
   if (!q) { inputEl.focus(); return; }
   doSearch(q);
   inputEl.value = '';
@@ -137,6 +147,7 @@ const scannerTips = ["Centra el código", "Acerca el celular", "Buena luz", "Man
 
 function updateScannerTip() {
   const tipEl = document.getElementById('scannerTip');
+  if(!tipEl) return;
   let i = 0;
   tipInterval = setInterval(() => {
     i = (i + 1) % scannerTips.length;
@@ -146,12 +157,14 @@ function updateScannerTip() {
 }
 
 async function startScanner() {
-  document.getElementById('scannerModal').style.display = 'flex';
+  const mod = document.getElementById('scannerModal');
+  if(mod) mod.style.display = 'flex';
   if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
   try {
     cameras = await Html5Qrcode.getCameras();
     if (cameras && cameras.length > 0) {
-      if (cameras.length > 1) document.getElementById('switchCameraBtn').style.display = 'block';
+      const btn = document.getElementById('switchCameraBtn');
+      if (cameras.length > 1 && btn) btn.style.display = 'block';
       currentCameraIndex = cameras.length - 1;
       await startWithCamera(cameras[currentCameraIndex].id);
       updateScannerTip();
@@ -166,7 +179,8 @@ async function startWithCamera(cameraId) {
   if (html5QrCode.isScanning) await html5QrCode.stop();
   await html5QrCode.start(cameraId, config, (decodedText) => {
     stopScanner();
-    document.getElementById('productInput').value = decodedText;
+    const inp = document.getElementById('productInput');
+    if(inp) inp.value = decodedText;
     doSearch(decodedText);
   });
 }
@@ -174,32 +188,47 @@ async function startWithCamera(cameraId) {
 function stopScanner() {
   clearInterval(tipInterval);
   if (html5QrCode && html5QrCode.isScanning) {
-    html5QrCode.stop().then(() => { document.getElementById('scannerModal').style.display = 'none'; });
-  } else { document.getElementById('scannerModal').style.display = 'none'; }
+    html5QrCode.stop().then(() => { 
+      const mod = document.getElementById('scannerModal');
+      if(mod) mod.style.display = 'none'; 
+    });
+  } else { 
+    const mod = document.getElementById('scannerModal');
+    if(mod) mod.style.display = 'none'; 
+  }
 }
 
 // --- ANALÍTICA ---
 function openAnalytics(encodedData) {
   const product = JSON.parse(decodeURIComponent(encodedData));
   const modal = document.getElementById('analyticsModal');
-  document.getElementById('anaImg').src = product.thumbnail;
-  document.getElementById('anaTitle').textContent = product.title;
-  document.getElementById('anaPrice').textContent = product.price;
+  if(!modal) return;
+
+  const im = document.getElementById('anaImg');
+  const ti = document.getElementById('anaTitle');
+  const pr = document.getElementById('anaPrice');
+  if(im) im.src = product.thumbnail;
+  if(ti) ti.textContent = product.title;
+  if(pr) pr.textContent = product.price;
 
   const currentPrice = product.extracted_price || 100000;
-  document.getElementById('minPrice').textContent = formatPrice(currentPrice * 0.82);
-  document.getElementById('avgPrice').textContent = formatPrice(currentPrice * 1.08);
+  const minP = document.getElementById('minPrice');
+  const avgP = document.getElementById('avgPrice');
+  if(minP) minP.textContent = formatPrice(currentPrice * 0.82);
+  if(avgP) avgP.textContent = formatPrice(currentPrice * 1.08);
 
   updateChart();
   modal.style.display = 'flex';
 }
 
 function closeAnalytics() {
-  document.getElementById('analyticsModal').style.display = 'none';
+  const modal = document.getElementById('analyticsModal');
+  if(modal) modal.style.display = 'none';
 }
 
 function updateChart() {
   const container = document.getElementById('chartBars');
+  if(!container) return;
   container.innerHTML = '';
   for (let i = 0; i < 12; i++) {
     const height = Math.floor(Math.random() * 75) + 20;
@@ -234,6 +263,7 @@ function loadRecommendations() {
   const data = JSON.parse(lastSearch);
   const recoSection = document.getElementById('recoSection');
   const recoCard = document.getElementById('recoCard');
+  if(!recoSection || !recoCard) return;
 
   const discount = 0.12;
   const newPriceValue = Math.floor((data.extracted_price || 100000) * (1 - discount));
@@ -249,18 +279,35 @@ function loadRecommendations() {
         <span class="reco-save-label">¡Baja de precio!</span>
       </div>
     </div>
-    <button class="btn btn-primary" onclick="doSearch('${data.name}')" style="width:auto; padding: 0.5rem 1rem; font-size: 0.75rem;">Ver Oferta</button>
+    <button class="btn btn-primary" onclick="doSearch('${data.name.replace(/'/g, "\\'")}')" style="width:auto; padding: 0.5rem 1rem; font-size: 0.75rem;">Ver Oferta</button>
   `;
   recoSection.style.display = 'block';
 }
 
 // Event Listeners Globales
 window.addEventListener('DOMContentLoaded', () => {
+  console.log("PriceMind Cargado Correctamente");
   detectLocation();
   loadRecommendations();
   
-  document.getElementById('cameraStartBtn').addEventListener('click', startScanner);
-  document.getElementById('closeScanner').addEventListener('click', stopScanner);
-  document.getElementById('btnProduct').addEventListener('click', searchProduct);
-  document.getElementById('productInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') searchProduct(); });
+  const camBtn = document.getElementById('cameraStartBtn');
+  const closeCam = document.getElementById('closeScanner');
+  const switchCam = document.getElementById('switchCameraBtn');
+  const searchBtn = document.getElementById('btnProduct');
+  const inputEl = document.getElementById('productInput');
+
+  if(camBtn) camBtn.addEventListener('click', startScanner);
+  if(closeCam) closeCam.addEventListener('click', stopScanner);
+  if(switchCam) switchCam.addEventListener('click', switchCamera);
+  if(searchBtn) searchBtn.addEventListener('click', searchProduct);
+  if(inputEl) inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') searchProduct(); });
+
+  // Chips de sugerencia
+  document.querySelectorAll('.tip-chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+      const term = this.textContent;
+      if(inputEl) inputEl.value = term;
+      doSearch(term);
+    });
+  });
 });
