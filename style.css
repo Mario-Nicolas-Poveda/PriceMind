@@ -179,7 +179,66 @@ footer strong{color:rgba(255,255,255,.8)}
   100% { transform: scale(0.95); opacity: 0.7; }
 }
 
+/* AJUSTES PARA MÓVILES (Optimización Samsung A13 y similares) */
+@media (max-width: 480px) {
+  .header-inner {
+    padding: 0.75rem 1rem;
+  }
+  
+  .logo-sub {
+    display: none; /* Ocultar el lema largo en móvil para ahorrar espacio */
+  }
+  
+  .location-badge {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem; /* Un poco más pequeño para que no toque los bordes */
+    line-height: 1.1;
+  }
+
+  .hero p {
+    font-size: 0.95rem;
+    padding: 0 10px;
+  }
+
+  .search-section {
+    padding: 0 1rem 2rem;
+  }
+
+  .search-wrapper {
+    gap: 1rem;
+  }
+
+  .search-card {
+    padding: 1.5rem;
+  }
+
+  .results-section {
+    padding: 1rem;
+  }
+
+  .results-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .scanner-content {
+    width: 95%;
+  }
+  
+  .scanner-header h3 {
+    font-size: 0.9rem;
+  }
+}
+
 /* Breakpoint visibility */
-@media (max-width: 390px) { .hp-hide-mobile { display: none !important; } }
+@media (max-width: 390px) { 
+  .hp-hide-mobile { display: none !important; }
+  .hero h1 { font-size: 1.9rem; }
+}
 @media (min-width: 391px) and (max-width: 768px) { .hp-hide-tablet { display: none !important; } }
 @media (min-width: 769px) { .hp-hide-desktop { display: none !important; } }
