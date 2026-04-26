@@ -134,17 +134,34 @@ function openAnalytics(encodedData) {
 function updateChart(period) {
   const path = document.getElementById('chartPath');
   const fill = document.getElementById('chartFill');
-  if(!path || !fill) return;
+  const xAxis = document.getElementById('xAxis');
+  const dataPoints = document.getElementById('chartDataPoints');
+  if(!path || !fill || !xAxis || !dataPoints) return;
 
-  const pointsCount = period === 'dia' ? 8 : period === 'semana' ? 12 : 18;
+  let labels = [];
+  if(period === 'dia') labels = ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
+  else if(period === 'semana') labels = ['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'DOM'];
+  else labels = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+
+  const pointsCount = labels.length;
   const points = [];
   const width = 500;
   const height = 200;
 
-  for (let i = 0; i <= pointsCount; i++) {
-    const x = (i / pointsCount) * width;
+  xAxis.innerHTML = labels.map(l => `<span>${l}</span>`).join('');
+  dataPoints.innerHTML = '';
+
+  for (let i = 0; i < pointsCount; i++) {
+    const x = (i / (pointsCount - 1)) * width;
     const y = 40 + Math.random() * (height - 80);
     points.push({x, y});
+
+    // Crear Punto Visual (Div)
+    const dot = document.createElement('div');
+    dot.className = 'chart-data-point';
+    dot.style.left = `${(x / width) * 100}%`;
+    dot.style.top = `${(y / height) * 100}%`;
+    dataPoints.appendChild(dot);
   }
 
   let d = `M ${points[0].x} ${points[0].y}`;

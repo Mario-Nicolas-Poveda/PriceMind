@@ -447,15 +447,65 @@ footer strong{color:rgba(255,255,255,.8)}
 }
 
 /* ANALYTICS CHART STYLES */
+.chart-wrapper-main {
+  display: flex;
+  gap: 15px;
+  margin: 1.5rem 0 0.5rem;
+}
+.chart-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 0;
+  color: var(--gray-400);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: right;
+  min-width: 30px;
+}
 .chart-container {
   height: 220px;
-  background: var(--gray-50);
-  border-radius: 18px;
-  padding: 1rem;
-  margin: 1.5rem 0;
+  background: white;
+  border-radius: 12px;
+  flex: 1;
   position: relative;
-  overflow: hidden;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--gray-100);
+}
+.chart-grid-lines {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 0;
+  pointer-events: none;
+}
+.grid-line {
+  width: 100%;
+  height: 1px;
+  background: var(--gray-50);
+}
+.chart-x-axis {
+  display: flex;
+  justify-content: space-around;
+  margin-left: 45px;
+  margin-bottom: 2rem;
+  color: var(--gray-500);
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.chart-data-point {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 3px solid var(--blue-mid);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  box-shadow: 0 0 10px rgba(37,99,235,0.3);
 }
 #trendLine {
   width: 100%;

@@ -145,18 +145,28 @@
             <button class="time-btn" data-period="semana">Semana</button>
             <button class="time-btn" data-period="mes">Mes</button>
           </div>
-          <div class="chart-container">
-            <svg id="trendLine" viewBox="0 0 500 200" preserveAspectRatio="none">
-              <path id="chartPath" d="" fill="none" stroke="var(--blue-mid)" stroke-width="3" stroke-linecap="round"/>
-              <path id="chartFill" d="" fill="url(#lineGradient)" opacity="0.1"/>
-              <defs>
-                <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="var(--blue-mid)"/>
-                  <stop offset="100%" stop-color="transparent"/>
-                </linearGradient>
-              </defs>
-            </svg>
-            <div id="chartPoints"></div>
+          <div class="chart-wrapper-main">
+            <div class="chart-y-axis" id="yAxis">
+              <span>5M</span><span>4M</span><span>3M</span><span>2M</span><span>1M</span><span>0</span>
+            </div>
+            <div class="chart-container">
+              <div class="chart-grid-lines">
+                <div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div>
+              </div>
+              <svg id="trendLine" viewBox="0 0 500 200" preserveAspectRatio="none">
+                <path id="chartPath" d="" fill="none" stroke="var(--blue-mid)" stroke-width="3" stroke-linecap="round"/>
+                <path id="chartFill" d="" fill="url(#lineGradient)" opacity="0.1"/>
+                <defs>
+                  <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--blue-mid)"/><stop offset="100%" stop-color="transparent"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div id="chartDataPoints"></div>
+            </div>
+          </div>
+          <div class="chart-x-axis" id="xAxis">
+            <!-- Labels dinámicos -->
           </div>
           <div class="comparison-list">
             <div class="comp-box"><span>Mínimo</span><strong id="minPrice">--</strong></div>
