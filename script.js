@@ -129,8 +129,8 @@ const scannerTips = [
   "Centra el código de barras",
   "Acerca un poco más el celular",
   "Asegúrate de tener buena luz",
-  "Mantén el pulso firme",
-  "Aleja lentamente el dispositivo"
+  "Mantén el dispositivo firme",
+  "Mueve lento para enfocar"
 ];
 
 function updateScannerTip() {
