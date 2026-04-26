@@ -4,12 +4,12 @@ var userLocationData = { city: '', country_name: 'Colombia', country_code: 'CO' 
 
 // PRODUCTOS ELEGIDOS PARA LLENAR ESPACIOS (Simulación)
 const MOCK_PRODUCTS = [
-  { title: "Apple iPhone 15 Pro Max 256GB", price: "$ 5.499.000", extracted_price: 5499000, thumbnail: "https://http2.mlstatic.com/D_NQ_NP_890665-MLA71782867332_092023-O.webp", source: "Mercado Libre" },
-  { title: "Sony PlayStation 5 Slim 1TB", price: "$ 2.450.000", extracted_price: 2450000, thumbnail: "https://http2.mlstatic.com/D_NQ_NP_632431-MLA74071302825_012024-O.webp", source: "Amazon" },
-  { title: "AirPods Pro (2.ª generación)", price: "$ 980.000", extracted_price: 980000, thumbnail: "https://http2.mlstatic.com/D_NQ_NP_736168-MLA51839818861_102022-O.webp", source: "Éxito" },
-  { title: "Samsung Galaxy S24 Ultra", price: "$ 4.890.000", extracted_price: 4890000, thumbnail: "https://http2.mlstatic.com/D_NQ_NP_753630-MLA73981016738_012024-O.webp", source: "Alkosto" },
-  { title: "Monitor Gamer Odyssey G5 27\"", price: "$ 1.150.000", extracted_price: 1150000, thumbnail: "https://http2.mlstatic.com/D_NQ_NP_633663-MLA48011241189_102021-O.webp", source: "Mercado Libre" },
-  { title: "Cafetera Nespresso Vertuo Pop", price: "$ 450.000", extracted_price: 450000, thumbnail: "https://http2.mlstatic.com/D_NQ_NP_866405-MLA54923184651_042023-O.webp", source: "Falabella" }
+  { title: "Apple iPhone 15 Pro Max 256GB", price: "$ 5.499.000", extracted_price: 5499000, thumbnail: "https://images.unsplash.com/photo-1696446701796-da61225697cc?w=400&h=400&fit=crop", source: "Mercado Libre" },
+  { title: "Sony PlayStation 5 Slim 1TB", price: "$ 2.450.000", extracted_price: 2450000, thumbnail: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=400&fit=crop", source: "Amazon" },
+  { title: "AirPods Pro (2.ª generación)", price: "$ 980.000", extracted_price: 980000, thumbnail: "https://images.unsplash.com/photo-1588423770574-91993ca0a85a?w=400&h=400&fit=crop", source: "Éxito" },
+  { title: "Samsung Galaxy S24 Ultra", price: "$ 4.890.000", extracted_price: 4890000, thumbnail: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&h=400&fit=crop", source: "Alkosto" },
+  { title: "Monitor Gamer Odyssey G5 27\"", price: "$ 1.150.000", extracted_price: 1150000, thumbnail: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=400&fit=crop", source: "Mercado Libre" },
+  { title: "Cafetera Nespresso Vertuo Pop", price: "$ 450.000", extracted_price: 450000, thumbnail: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=400&fit=crop", source: "Falabella" }
 ];
 
 // 1. DETECTAR UBICACIÓN
