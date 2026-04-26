@@ -127,18 +127,20 @@ function openAnalytics(encodedData) {
   const gallery = document.getElementById('anaGallery');
   let images = [product.thumbnail];
   
-  // Intentar extraer imágenes adicionales de la API si existen
   if (product.images && Array.isArray(product.images)) {
     images = [...images, ...product.images].slice(0, 3);
   } else if (product.related_images && Array.isArray(product.related_images)) {
     images = [...images, ...product.related_images.map(img => img.link)].slice(0, 3);
-  } else {
-    // Fallback con imágenes temáticas si la API no devuelve más para este item específico
-    images.push("https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop");
-    images.push("https://images.unsplash.com/photo-1542491595-3004b44c582d?w=400&h=400&fit=crop");
   }
   
-  gallery.innerHTML = images.map(img => `<img src="${img}" class="gallery-thumb" onclick="document.getElementById('anaImg').src='${img}'">`).join('');
+  // Limpiar la galería si solo hay una imagen o poblarla si hay más
+  if (images.length > 1) {
+    gallery.innerHTML = images.map(img => `<img src="${img}" class="gallery-thumb" onclick="document.getElementById('anaImg').src='${img}'">`).join('');
+    gallery.style.display = 'flex';
+  } else {
+    gallery.innerHTML = '';
+    gallery.style.display = 'none';
+  }
 
   const price = product.extracted_price || 100000;
   document.getElementById('minPrice').textContent = formatPrice(price * 0.85);

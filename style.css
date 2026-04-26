@@ -68,25 +68,53 @@ header{background:linear-gradient(135deg,var(--blue-deep) 0%,#1e4ed8 60%,#2563eb
 .hero-input-wrap input:focus { border-color: var(--blue-mid); box-shadow: 0 0 0 4px var(--blue-pale); }
 .btn-hero { padding: 0 2.5rem; border-radius: 100px; font-weight: 700; font-size: 1rem; }
 
-/* MODAL SPLIT VIEW - GRÁFICA IZQUIERDA, PRODUCTO DERECHA */
+/* MODAL SPLIT VIEW - TAMAÑO FIJO Y ESTABLE */
 .split-modal-content {
   max-width: 1150px !important;
   width: 95% !important;
   display: flex !important;
-  flex-direction: row !important; /* Normal: Izquierda a Derecha */
+  flex-direction: row !important;
   padding: 0 !important;
-  position: relative; /* Para el botón de cierre global */
+  position: relative;
+  height: 650px; /* ALTURA FIJA PARA EVITAR SALTOS */
+  background: white;
+  border-radius: 28px;
+  overflow: hidden;
 }
 .modal-side-chart {
   flex: 1;
   padding: 2.5rem;
   background: white;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .modal-side-product {
-  flex: 0 0 350px;
+  flex: 0 0 380px;
   background: var(--gray-50);
-  padding: 2.5rem;
+  padding: 2rem;
   border-left: 1px solid var(--gray-200);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto; /* Por si el título es muy largo */
+}
+.main-img-container {
+  width: 100%;
+  height: 300px;
+  background: white;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.split-product-img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
 }
 
 .close-scanner-global {
@@ -115,6 +143,7 @@ header{background:linear-gradient(135deg,var(--blue-deep) 0%,#1e4ed8 60%,#2563eb
   gap: 10px;
   margin: 1rem 0;
   justify-content: center;
+  min-height: 70px;
 }
 .gallery-thumb {
   width: 60px;
@@ -131,9 +160,10 @@ header{background:linear-gradient(135deg,var(--blue-deep) 0%,#1e4ed8 60%,#2563eb
 .modal-prod-title {
   font-family: 'Sora', sans-serif;
   font-size: 1.1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   color: var(--blue-deep);
   text-align: center;
+  font-weight: 700;
 }
 
 @media (max-width: 950px) {
