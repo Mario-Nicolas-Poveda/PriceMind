@@ -6,7 +6,6 @@ var userLocationData = {
   country_code: 'CO'
 };
 
-
 // 1. DETECTAR UBICACIÓN
 async function detectLocation() {
   try {
@@ -36,7 +35,7 @@ function hideLoader() {
   document.getElementById('loader').style.display = 'none';
 }
 
-// 2. RENDERIZAR RESULTADOS (Con ordenamiento)
+// 2. RENDERIZAR RESULTADOS
 function renderProducts(items, query) {
   hideLoader();
   var grid = document.getElementById('productsGrid');
@@ -48,42 +47,24 @@ function renderProducts(items, query) {
     return;
   }
 
-  // FILTRO INTELIGENTE PARA CÓDIGOS DE BARRAS
-  // Si la búsqueda es solo números y larga (código de barras), filtramos por relevancia
   const isBarcode = /^\d{8,14}$/.test(query.trim());
   let filteredItems = items;
 
   if (isBarcode && items.length > 0) {
-    // Tomamos el primer resultado como referencia de "Verdad"
     const firstTitle = items[0].title.toLowerCase();
-    const keywords = firstTitle.split(' ').filter(word => word.length > 3); // Solo palabras significativas
+    const keywords = firstTitle.split(' ').filter(word => word.length > 3);
     
     filteredItems = items.filter((item, index) => {
-      if (index === 0) return true; // El primero siempre se queda
+      if (index === 0) return true;
       const title = item.title.toLowerCase();
-      // FILTRO MÁS ESTRICTO: Debe coincidir con al menos 2 palabras clave importantes
-      // o ser una coincidencia muy fuerte de marca.
       const matches = keywords.filter(key => title.includes(key));
       return matches.length >= 2 || (keywords.length > 0 && title.includes(keywords[0]));
     });
-
-    // Si después de filtrar solo queda 1 y parece basura (menos de 2 palabras coinciden), 
-    // mejor no mostrar nada irrelevante.
-    if (filteredItems.length === 1 && items.length > 5) {
-        const firstTitle = items[0].title.toLowerCase();
-        // Si el primer título no tiene nada que ver con el código, lo vaciamos
-        // (Google a veces mete basura incluso en el primer resultado si no hay nada)
-    }
   }
 
-  // ORDENAR de menor a mayor precio
-  filteredItems.sort((a, b) => {
-    const priceA = a.extracted_price || 0;
-    const priceB = b.extracted_price || 0;
-    return priceA - priceB;
-  });
+  filteredItems.sort((a, b) => (a.extracted_price || 0) - (b.extracted_price || 0));
 
-  status.textContent = filteredItems.length + ' ofertas encontradas para este producto';
+  status.textContent = filteredItems.length + ' ofertas encontradas';
   var html = '<div class="products-grid">';
 
   for (var i = 0; i < filteredItems.length; i++) {
@@ -94,7 +75,6 @@ function renderProducts(items, query) {
     var img = item.thumbnail || '';
     var delivery = item.delivery || '';
     
-    // Serializamos el item para pasarlo a la función de analítica
     const itemData = encodeURIComponent(JSON.stringify(item));
 
     html += `
@@ -109,43 +89,18 @@ function renderProducts(items, query) {
         </div>
       </div>`;
   }
-
   html += '</div>';
-
-  // Añadimos las funciones globales necesarias si no existen
-  window.openAnalytics = function(encodedData) {
-    const product = JSON.parse(decodeURIComponent(encodedData));
-    const modal = document.getElementById('analyticsModal');
-    document.getElementById('anaImg').src = product.thumbnail;
-    document.getElementById('anaTitle').textContent = product.title;
-    document.getElementById('anaPrice').textContent = product.price;
-
-    // Mock de precios histórico
-    const currentPrice = product.extracted_price || 100000;
-    document.getElementById('minPrice').textContent = formatPrice(currentPrice * 0.82);
-    document.getElementById('avgPrice').textContent = formatPrice(currentPrice * 1.08);
-
-    updateChart();
-    modal.style.display = 'flex';
-  };
-
-  window.closeAnalytics = function() {
-    document.getElementById('analyticsModal').style.display = 'none';
-  };
   grid.innerHTML = html;
 }
 
-// 3. REALIZAR BÚSQUEDA (Con parámetro de ordenamiento)
+// 3. REALIZAR BÚSQUEDA
 async function doSearch(query) {
   if (!query) return;
-  
   currentQuery = query;
   showLoader();
-  document.getElementById('resultsStatus').textContent = 'Analizando las mejores ofertas...';
+  document.getElementById('resultsStatus').textContent = 'Analizando ofertas...';
 
   const locationParam = userLocationData.city ? `${userLocationData.city}, ${userLocationData.country_name}` : userLocationData.country_name;
-  
-  // Llamamos a nuestro propio backend en Vercel
   const targetUrl = `/api/search?q=${encodeURIComponent(query)}&location=${encodeURIComponent(locationParam)}&hl=es&gl=${userLocationData.country_code.toLowerCase()}`;
 
   try {
@@ -153,7 +108,6 @@ async function doSearch(query) {
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     
-    // GUARDAR EN HISTORIAL (para recomendaciones)
     if (data.shopping_results && data.shopping_results.length > 0) {
       saveToHistory(data.shopping_results[0]);
     }
@@ -162,12 +116,7 @@ async function doSearch(query) {
   } catch (err) {
     console.error('Error en búsqueda:', err);
     hideLoader();
-    document.getElementById('productsGrid').innerHTML = `
-      <div class="error-box">
-        <p>No se pudo completar la búsqueda.</p>
-        <p style="font-size:0.8rem">${err.message}</p>
-      </div>`;
-    document.getElementById('resultsStatus').textContent = 'Error de conexión';
+    document.getElementById('productsGrid').innerHTML = `<div class="error-box"><p>Error: ${err.message}</p></div>`;
   }
 }
 
@@ -176,22 +125,15 @@ function searchProduct() {
   var q = inputEl.value.trim();
   if (!q) { inputEl.focus(); return; }
   doSearch(q);
-  inputEl.value = ''; // Limpiar la barra de búsqueda
+  inputEl.value = '';
 }
 
-// --- ESCÁNER DE CÓDIGO DE BARRAS ---
+// --- ESCÁNER ---
 let html5QrCode;
 let cameras = [];
 let currentCameraIndex = 0;
 let tipInterval;
-
-const scannerTips = [
-  "Centra el código de barras",
-  "Acerca un poco más el celular",
-  "Asegúrate de tener buena luz",
-  "Mantén el dispositivo firme",
-  "Mueve lento para enfocar"
-];
+const scannerTips = ["Centra el código", "Acerca el celular", "Buena luz", "Mantén firme"];
 
 function updateScannerTip() {
   const tipEl = document.getElementById('scannerTip');
@@ -199,147 +141,54 @@ function updateScannerTip() {
   tipInterval = setInterval(() => {
     i = (i + 1) % scannerTips.length;
     tipEl.style.opacity = 0;
-    setTimeout(() => {
-      tipEl.textContent = scannerTips[i];
-      tipEl.style.opacity = 1;
-    }, 300);
+    setTimeout(() => { tipEl.textContent = scannerTips[i]; tipEl.style.opacity = 1; }, 300);
   }, 4000);
 }
 
 async function startScanner() {
   document.getElementById('scannerModal').style.display = 'flex';
-  
-  if (!html5QrCode) {
-    html5QrCode = new Html5Qrcode("reader");
-  }
-  
-  const config = { 
-    fps: 10, 
-    qrbox: { width: 300, height: 180 }, // Ajustado para códigos de barras alargados
-    aspectRatio: 1.0,
-    formatsToSupport: [ 
-      Html5QrcodeSupportedFormats.EAN_13, 
-      Html5QrcodeSupportedFormats.EAN_8, 
-      Html5QrcodeSupportedFormats.UPC_A, 
-      Html5QrcodeSupportedFormats.CODE_128,
-      Html5QrcodeSupportedFormats.QR_CODE
-    ]
-  };
-
+  if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
   try {
-    // Obtener todas las cámaras disponibles
     cameras = await Html5Qrcode.getCameras();
-    
     if (cameras && cameras.length > 0) {
-      // Si hay más de una cámara, mostrar botón de cambio
-      if (cameras.length > 1) {
-        document.getElementById('switchCameraBtn').style.display = 'block';
-        // Intentar buscar la cámara trasera por defecto (usualmente al final de la lista)
-        currentCameraIndex = cameras.length - 1;
-      }
-      
+      if (cameras.length > 1) document.getElementById('switchCameraBtn').style.display = 'block';
+      currentCameraIndex = cameras.length - 1;
       await startWithCamera(cameras[currentCameraIndex].id);
       updateScannerTip();
-    } else {
-      alert("No se detectaron cámaras.");
-      stopScanner();
     }
-  } catch (err) {
-    console.error("Error al iniciar cámara:", err);
-    alert("No se pudo acceder a la cámara. Verifica los permisos.");
-    stopScanner();
-  }
+  } catch (err) { stopScanner(); }
 }
 
 async function startWithCamera(cameraId) {
-  const config = { 
-    fps: 10, 
-    qrbox: { width: 300, height: 180 },
-    aspectRatio: 1.0,
-    formatsToSupport: [ 
-      Html5QrcodeSupportedFormats.EAN_13, 
-      Html5QrcodeSupportedFormats.EAN_8, 
-      Html5QrcodeSupportedFormats.UPC_A, 
-      Html5QrcodeSupportedFormats.CODE_128,
-      Html5QrcodeSupportedFormats.QR_CODE
-    ]
+  const config = { fps: 10, qrbox: { width: 300, height: 180 }, aspectRatio: 1.0,
+    formatsToSupport: [Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8, Html5QrcodeSupportedFormats.UPC_A]
   };
-
-  if (html5QrCode.isScanning) {
-    await html5QrCode.stop();
-  }
-
-  await html5QrCode.start(
-    cameraId, 
-    config,
-    (decodedText) => {
-      stopScanner();
-      document.getElementById('productInput').value = decodedText;
-      doSearch(decodedText);
-    }
-  );
-}
-
-async function switchCamera() {
-  if (cameras.length > 1) {
-    currentCameraIndex = (currentCameraIndex + 1) % cameras.length;
-    const btn = document.getElementById('switchCameraBtn');
-    btn.disabled = true;
-    btn.textContent = "Cambiando...";
-    
-    try {
-      await startWithCamera(cameras[currentCameraIndex].id);
-    } catch (err) {
-      console.error("Error al cambiar de cámara", err);
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = `
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;"><path d="M21 7v6h-6"></path><path d="M3 17v-6h6"></path><path d="M3 17a9 9 0 0 1 14.82-6.82L21 13"></path><path d="M21 7a9 9 0 0 0-14.82 6.82L3 11"></path></svg>
-        Cambiar Lente`;
-    }
-  }
+  if (html5QrCode.isScanning) await html5QrCode.stop();
+  await html5QrCode.start(cameraId, config, (decodedText) => {
+    stopScanner();
+    document.getElementById('productInput').value = decodedText;
+    doSearch(decodedText);
+  });
 }
 
 function stopScanner() {
   clearInterval(tipInterval);
   if (html5QrCode && html5QrCode.isScanning) {
-    html5QrCode.stop().then(() => {
-      document.getElementById('scannerModal').style.display = 'none';
-    });
-  } else {
-    document.getElementById('scannerModal').style.display = 'none';
-  }
+    html5QrCode.stop().then(() => { document.getElementById('scannerModal').style.display = 'none'; });
+  } else { document.getElementById('scannerModal').style.display = 'none'; }
 }
 
-// Event Listeners para el escáner
-document.getElementById('cameraStartBtn').addEventListener('click', startScanner);
-document.getElementById('closeScanner').addEventListener('click', stopScanner);
-document.getElementById('switchCameraBtn').addEventListener('click', switchCamera);
-
-document.getElementById('btnProduct').addEventListener('click', searchProduct);
-document.getElementById('productInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') searchProduct();
-});
-
-document.querySelectorAll('.tip-chip').forEach(chip => {
-  chip.addEventListener('click', function() {
-    const term = this.textContent;
-    document.getElementById('productInput').value = term;
-    doSearch(term);
-  });
-});
-
-// --- SISTEMA DE ANALÍTICA DE PRECIOS (MOCK) ---
-function openAnalytics(product) {
+// --- ANALÍTICA ---
+function openAnalytics(encodedData) {
+  const product = JSON.parse(decodeURIComponent(encodedData));
   const modal = document.getElementById('analyticsModal');
   document.getElementById('anaImg').src = product.thumbnail;
   document.getElementById('anaTitle').textContent = product.title;
   document.getElementById('anaPrice').textContent = product.price;
 
-  // Mock de precios histórico
   const currentPrice = product.extracted_price || 100000;
-  document.getElementById('minPrice').textContent = formatPrice(currentPrice * 0.85);
-  document.getElementById('avgPrice').textContent = formatPrice(currentPrice * 1.05);
+  document.getElementById('minPrice').textContent = formatPrice(currentPrice * 0.82);
+  document.getElementById('avgPrice').textContent = formatPrice(currentPrice * 1.08);
 
   updateChart();
   modal.style.display = 'flex';
@@ -352,36 +201,22 @@ function closeAnalytics() {
 function updateChart() {
   const container = document.getElementById('chartBars');
   container.innerHTML = '';
-  
-  // Generamos 12 barras con alturas aleatorias
   for (let i = 0; i < 12; i++) {
-    const height = Math.floor(Math.random() * 75) + 20; // 20% a 95%
+    const height = Math.floor(Math.random() * 75) + 20;
     const bar = document.createElement('div');
     bar.className = 'chart-bar';
     bar.style.height = height + '%';
-    
-    // Etiqueta de precio simulada al pasar el mouse
     const simPrice = Math.floor(Math.random() * 50000) + 100000;
     bar.setAttribute('data-val', '$' + (simPrice/1000).toFixed(1) + 'k');
-    
     container.appendChild(bar);
   }
-
-  // Cambiar estado activo de botones (simple)
-  document.querySelectorAll('.time-btn').forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      updateChart();
-    };
-  });
 }
 
 function formatPrice(val) {
   return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(val);
 }
 
-// --- PERSISTENCIA Y RECOMENDACIONES ---
+// --- RECOMENDACIONES ---
 function saveToHistory(product) {
   const historyData = {
     name: product.title,
@@ -396,15 +231,13 @@ function saveToHistory(product) {
 function loadRecommendations() {
   const lastSearch = localStorage.getItem('lastSearch');
   if (!lastSearch) return;
-
   const data = JSON.parse(lastSearch);
   const recoSection = document.getElementById('recoSection');
   const recoCard = document.getElementById('recoCard');
 
-  // Simulamos una oferta (bajamos el precio un 10-15%)
   const discount = 0.12;
-  const newPriceValue = Math.floor(data.extracted_price * (1 - discount));
-  const newPriceFormatted = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(newPriceValue);
+  const newPriceValue = Math.floor((data.extracted_price || 100000) * (1 - discount));
+  const newPriceFormatted = formatPrice(newPriceValue);
 
   recoCard.innerHTML = `
     <img src="${data.image}" class="reco-img" alt="${data.name}">
@@ -416,13 +249,18 @@ function loadRecommendations() {
         <span class="reco-save-label">¡Baja de precio!</span>
       </div>
     </div>
-    <button class="btn btn-primary" onclick="window.location.reload();" style="width:auto; padding: 0.5rem 1rem; font-size: 0.75rem;">Ver Oferta</button>
+    <button class="btn btn-primary" onclick="doSearch('${data.name}')" style="width:auto; padding: 0.5rem 1rem; font-size: 0.75rem;">Ver Oferta</button>
   `;
-
   recoSection.style.display = 'block';
 }
 
+// Event Listeners Globales
 window.addEventListener('DOMContentLoaded', () => {
   detectLocation();
   loadRecommendations();
+  
+  document.getElementById('cameraStartBtn').addEventListener('click', startScanner);
+  document.getElementById('closeScanner').addEventListener('click', stopScanner);
+  document.getElementById('btnProduct').addEventListener('click', searchProduct);
+  document.getElementById('productInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') searchProduct(); });
 });
