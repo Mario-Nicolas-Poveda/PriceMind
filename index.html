@@ -1,33 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta name="referrer" content="no-referrer">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PriceMind - Comparador Inteligente de Precios</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&amp;family=DM+Sans:wght@400;500&amp;display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
-
 <body>
 
   <header>
     <div class="header-inner">
       <a class="logo" href="#">
         <div class="logo-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 6v6l4 2"></path>
-          </svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
         </div>
         <div>
           <span class="logo-text">PriceMind</span>
-          <span class="logo-sub">Comparador Inteligente de Precios</span>
+          <span class="logo-sub">Comparador Inteligente</span>
         </div>
       </a>
       <div class="header-controls">
@@ -51,203 +43,130 @@
   <section class="hero">
     <div class="hero-eyebrow">Inteligencia de Precios</div>
     <h1>Compara precios<br><span>en segundos</span></h1>
-    <p>Busca por nombre de producto o código de barras y encuentra las mejores ofertas reales.</p>
+    <p>La herramienta definitiva para ahorrar en cada compra.</p>
   </section>
 
-  <!-- SECCIÓN DE RECOMENDACIONES PERSONALIZADAS (Dinamica) -->
+  <!-- SECCIÓN DE RECOMENDACIONES -->
   <div class="reco-container">
     <div class="reco-section" id="recoSection" style="display:none;">
       <div class="reco-header">
-        <div class="reco-title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue-mid)" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="m12 15 2 2 4-4"></path>
-            <path d="M7 21h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Z"></path>
-            <path d="M5 9h14"></path>
-          </svg>
-          Sugerencia para ti
-        </div>
+        <div class="reco-title">Sugerencias para ti</div>
         <div class="reco-badge">MEJOR PRECIO</div>
       </div>
-      <div class="reco-grid" id="recoGrid">
-        <!-- Se llenarán dinámicamente 3 tarjetas -->
-      </div>
+      <div class="reco-grid" id="recoGrid"></div>
     </div>
   </div>
 
+  <!-- BUSCADOR HEROICO -->
   <section class="search-section">
-    <div class="search-wrapper">
-      <div class="search-card">
-        <div class="card-icon blue">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
+    <div class="discovery-content">
+      <div class="search-hero-card">
+        <div class="card-title">Encuentra el mejor precio real</div>
+        <div class="hero-input-area">
+          <div class="input-wrap hero-input-wrap">
+            <input type="text" id="productInput" placeholder="¿Qué producto buscas hoy?">
+            <button class="camera-btn" id="cameraStartBtn">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+            </button>
+          </div>
+          <button class="btn btn-primary btn-hero" id="btnProduct">Iniciar Búsqueda</button>
         </div>
-        <div class="card-title">Comparar en Google</div>
-        <div class="input-wrap">
-          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-          <input type="text" id="productInput" placeholder="Ej: &quot;iPhone 15 Pro&quot;">
-          <button class="camera-btn" id="cameraStartBtn" title="Escanear código de barras">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z">
-              </path>
-              <circle cx="12" cy="13" r="3"></circle>
-            </svg>
-          </button>
-        </div>
-        <button class="btn btn-primary" id="btnProduct">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-          Buscar Producto
-        </button>
-      </div>
-
-      <div class="search-card analytics-card">
-        <div class="card-icon indigo">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4338ca" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 3v18h18"></path>
-            <path d="m19 9-5 5-4-4-3 3"></path>
-          </svg>
-        </div>
-        <div class="card-title">Análisis de Tendencias</div>
-        <p style="font-size: 0.85rem; color: var(--gray-500); line-height: 1.5; margin-bottom: 1.2rem;">
-          Monitorea si es el mejor momento para comprar. Analizamos el historial de precios por ti para maximizar tu ahorro.
-        </p>
-        <button class="btn btn-secondary" onclick="alert('Busca un producto y haz clic en él para ver sus tendencias.')">
-          Ver inteligencia de datos
-        </button>
       </div>
     </div>
   </section>
 
-  <section class="results-section">
-    <div class="results-header">
-      <div class="results-title">Resultados</div>
-      <div class="results-status" id="resultsStatus">Esperando búsqueda...</div>
-    </div>
-    <div class="results-box" id="resultsBox">
-      <div class="placeholder" id="placeholder">
-        <div class="placeholder-icon">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.8"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
+  <!-- RESULTADOS FULL WIDTH -->
+  <section class="results-full-width">
+    <div class="discovery-content">
+      <div class="results-header">
+        <div class="results-title">Resultados</div>
+        <div id="resultsStatus" class="results-status">Esperando búsqueda...</div>
+      </div>
+      <div class="results-box" id="resultsBox">
+        <div class="placeholder" id="placeholder">
+          <div class="placeholder-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.8"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+          </div>
+          <div class="placeholder-title">Tus ofertas aparecerán aquí</div>
         </div>
-        <div class="placeholder-title">Inicia tu búsqueda de precios</div>
-        <div class="placeholder-text">Escribe el nombre de un producto o código de barras y haz clic en Buscar. Los
-          resultados aparecerán aquí.</div>
+        <div class="loader" id="loader">
+           <div class="spinner"></div>
+           <div class="loader-text">Buscando...</div>
+        </div>
+        <div id="productsGrid"></div>
       </div>
-      <div class="loader" id="loader">
-        <div class="spinner"></div>
-        <div class="loader-text">Buscando los mejores precios...</div>
+      
+      <div class="tips-row">
+        <span class="tip-chip">iPhone 15</span><span class="tip-chip">PS5 Slim</span><span class="tip-chip">MacBook</span>
       </div>
-      <div id="productsGrid"></div>
-    </div>
 
-    <div class="tips-row">
-      <span class="tip-chip" id="chip1">iPhone 15 Pro</span>
-      <span class="tip-chip" id="chip2">Sony WH-1000XM5</span>
-      <span class="tip-chip" id="chip3">Samsung Galaxy S24</span>
-      <span class="tip-chip" id="chip4">Nike Air Max</span>
-      <span class="tip-chip" id="chip5">MacBook Air M3</span>
-    </div>
-
-    <!-- SECCIÓN: QUIZÁS TE INTERESE (Descubrimiento) -->
-    <div class="discovery-section">
-      <div class="discovery-content">
+      <!-- QUIZÁS TE INTERESE -->
+      <div class="discovery-section-inner">
         <div class="discovery-header">
           <h3 class="discovery-title">Quizás te interese</h3>
-          <span class="discovery-subtitle">Basado en tendencias de hoy en Colombia</span>
+          <span class="discovery-subtitle">Tendencias en Colombia</span>
         </div>
-        <div class="products-grid" id="discoveryGrid">
-          <!-- Llenado automático con JS -->
-        </div>
+        <div class="products-grid" id="discoveryGrid"></div>
       </div>
     </div>
   </section>
 
-  <!-- SECCIÓN DE TIENDAS ALIADAS -->
   <section class="partners-section">
-    <div class="partners-title">Tiendas Comparadas</div>
     <div class="partners-grid">
-      <div class="partner-logo">Mercado Libre</div>
-      <div class="partner-logo">Amazon</div>
-      <div class="partner-logo">Éxito</div>
-      <div class="partner-logo">Carulla</div>
-      <div class="partner-logo">Alkosto</div>
-      <div class="partner-logo">Falabella</div>
+      <div class="partner-logo">Mercado Libre</div><div class="partner-logo">Amazon</div><div class="partner-logo">Éxito</div><div class="partner-logo">Falabella</div>
     </div>
   </section>
 
-  <footer>
-    <strong>PriceMind</strong> — Comparador Inteligente de Precios &nbsp;•&nbsp; Resultados en tiempo real
-  </footer>
+  <footer>PriceMind — Resultados en tiempo real</footer>
 
-  <script src="script.js" defer></script>
-
-  <!-- MODAL DE ANÁLISIS DE PRECIOS -->
+  <!-- MODAL DE ANÁLISIS SPLIT VIEW -->
   <div class="scanner-modal" id="analyticsModal">
-    <div class="scanner-content" style="max-width: 580px;">
-      <div class="scanner-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue-mid)" stroke-width="2.5">
-            <path d="M3 3v18h18"></path>
-            <path d="m19 9-5 5-4-4-3 3"></path>
-          </svg>
-          <h3 style="margin:0">Análisis de Mercado</h3>
+    <div class="scanner-content split-modal-content">
+      <div class="split-left">
+        <div class="scanner-header">
+          <h3 id="anaTitle">Producto</h3>
         </div>
-        <button class="close-scanner" onclick="closeAnalytics()">×</button>
+        <div class="product-detail-hero">
+          <img src="" id="anaImg" class="split-product-img">
+          <div class="split-product-meta">
+            <div id="anaStore" class="product-store">Tienda</div>
+            <div id="anaPrice" class="split-current-price">--</div>
+            <div id="anaShipping" class="product-shipping"></div>
+          </div>
+          <a href="#" id="buyBtn" target="_blank" class="btn btn-primary btn-full">Ir a la tienda oficial</a>
+        </div>
       </div>
-      <div class="analytics-body" style="padding: 1.5rem;">
-        <div class="analytics-product-info" style="display:flex; gap:1.5rem; align-items:center; margin-bottom:1.5rem; background: var(--gray-50); padding:1rem; border-radius:15px;">
-          <img src="" id="anaImg" style="width:80px; height:80px; object-fit:contain; background:white; border-radius:10px; padding:5px;">
-          <div>
-            <div id="anaTitle" style="font-size: 1rem; font-weight:700; color:var(--blue-deep); margin-bottom:5px;">Producto</div>
-            <div id="anaPrice" style="font-size: 1.2rem; font-weight:800; color:var(--blue-mid);">--</div>
-          </div>
+      <div class="split-right">
+        <div class="scanner-header">
+          <h3>Analítica</h3>
+          <button class="close-scanner" onclick="closeAnalytics()">×</button>
         </div>
-        
-        <div class="time-selectors" style="display:flex; gap:10px; margin-bottom:1.5rem;">
-          <button class="time-btn active">Día</button>
-          <button class="time-btn" onclick="updateChart()">Semana</button>
-          <button class="time-btn" onclick="updateChart()">Mes</button>
-          <button class="time-btn" onclick="updateChart()">Año</button>
-        </div>
-
-        <div class="chart-container" style="height:200px; display:flex; align-items:flex-end; gap:8px; padding-bottom:20px; border-bottom: 2px solid var(--gray-100); position:relative;">
-          <div class="chart-grid-line"></div>
-          <div class="chart-grid-line" style="bottom: 50%;"></div>
-          <div class="chart-grid-line" style="bottom: 100%;"></div>
-          <div id="chartBars" style="display:flex; align-items:flex-end; gap:8px; flex:1; height:100%; justify-content: space-around;">
-            <!-- Barras generadas por JS -->
+        <div class="analytics-body">
+          <div class="time-selectors">
+            <button class="time-btn active">Día</button><button class="time-btn">Semana</button><button class="time-btn">Mes</button>
           </div>
-        </div>
-        
-        <div class="comparison-list" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1.5rem;">
-          <div style="background:var(--blue-pale); padding:1rem; border-radius:12px; text-align:center;">
-            <div style="font-size:0.7rem; color:var(--blue-mid); text-transform:uppercase; font-weight:700;">Mínimo Histórico</div>
-            <strong id="minPrice" style="font-size:1.1rem; color:var(--blue-deep);">$ --</strong>
+          <div class="chart-container">
+            <div class="chart-grid-line"></div><div class="chart-grid-line" style="bottom:50%"></div>
+            <div id="chartBars" style="display:flex; align-items:flex-end; gap:8px; height:100%; justify-content:space-around;"></div>
           </div>
-          <div style="background:var(--gray-50); padding:1rem; border-radius:12px; text-align:center;">
-            <div style="font-size:0.7rem; color:var(--gray-500); text-transform:uppercase; font-weight:700;">Precio Promedio</div>
-            <strong id="avgPrice" style="font-size:1.1rem; color:var(--gray-700);">$ --</strong>
+          <div class="comparison-list">
+            <div class="comp-box"><span>Mínimo</span><strong id="minPrice">--</strong></div>
+            <div class="comp-box"><span>Promedio</span><strong id="avgPrice">--</strong></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</body>
 
+  <!-- MODAL ESCÁNER -->
+  <div class="scanner-modal" id="scannerModal">
+    <div class="scanner-content">
+      <div class="scanner-header"><h3>Escáner</h3><button class="close-scanner" id="closeScanner">×</button></div>
+      <div id="reader"></div>
+      <div class="scanner-tip" id="scannerTip">Centra el código</div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
 </html>
