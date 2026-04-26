@@ -44,6 +44,20 @@
     <p>Busca por nombre de producto o código de barras y encuentra las mejores ofertas reales.</p>
   </section>
 
+  <!-- SECCIÓN DE RECOMENDACIONES PERSONALIZADAS (Dinamica) -->
+  <div class="reco-container">
+    <div class="reco-section" id="recoSection" style="display:none;">
+      <div class="reco-header">
+        <div class="reco-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue-mid)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 15 2 2 4-4"></path><path d="M7 21h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Z"></path><path d="M5 9h14"></path></svg>
+          Sugerencia para ti
+        </div>
+        <div class="reco-badge">MEJOR PRECIO</div>
+      </div>
+      <div class="reco-card" id="recoCard"></div>
+    </div>
+  </div>
+
   <section class="search-section">
     <div class="search-wrapper">
       <div class="search-card">
@@ -129,19 +143,18 @@
       <span class="tip-chip" id="chip4">Nike Air Max</span>
       <span class="tip-chip" id="chip5">MacBook Air M3</span>
     </div>
+  </section>
 
-    <!-- SECCIÓN DE RECOMENDACIONES PERSONALIZADAS -->
-    <div class="reco-section" id="recoSection" style="display:none;">
-      <div class="reco-header">
-        <div class="reco-title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue-mid)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 15 2 2 4-4"></path><path d="M7 21h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Z"></path><path d="M5 9h14"></path></svg>
-          Basado en tu última búsqueda
-        </div>
-        <div class="reco-badge">OFERTA DE HOY</div>
-      </div>
-      <div class="reco-card" id="recoCard">
-        <!-- Se llenará dinámicamente -->
-      </div>
+  <!-- SECCIÓN DE TIENDAS ALIADAS -->
+  <section class="partners-section">
+    <div class="partners-title">Tiendas Comparadas</div>
+    <div class="partners-grid">
+      <div class="partner-logo">Mercado Libre</div>
+      <div class="partner-logo">Amazon</div>
+      <div class="partner-logo">Éxito</div>
+      <div class="partner-logo">Carulla</div>
+      <div class="partner-logo">Alkosto</div>
+      <div class="partner-logo">Falabella</div>
     </div>
   </section>
 

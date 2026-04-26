@@ -178,13 +178,20 @@ footer strong{color:rgba(255,255,255,.8)}
   100% { transform: scale(0.95); opacity: 0.7; }
 }
 
-/* SECCIÓN RECOMENDACIONES */
+.reco-container { 
+  max-width: 760px; 
+  margin: -40px auto 30px; 
+  padding: 0 20px; 
+  position: relative; 
+  z-index: 20; 
+}
+
 .reco-section {
-  margin-top: 3rem;
   background: white;
-  border-radius: 20px;
+  border-radius: 24px;
   padding: 1.5rem;
-  border: 1px dashed var(--blue-ghost);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  border: 1px solid var(--blue-ghost);
 }
 .reco-header {
   display: flex;
@@ -226,6 +233,55 @@ footer strong{color:rgba(255,255,255,.8)}
 .reco-new-price { font-family: 'Sora', sans-serif; font-weight: 800; color: var(--blue-mid); font-size: 1.1rem; }
 .reco-old-price { font-size: 0.8rem; color: var(--gray-500); text-decoration: line-through; }
 .reco-save-label { color: var(--green); font-size: 0.75rem; font-weight: 700; }
+
+/* SECCIÓN TIENDAS ALIADAS */
+.partners-section {
+  max-width: 900px;
+  margin: 4rem auto;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.partners-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+  opacity: 0.7;
+}
+
+.partners-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  align-items: center;
+  filter: grayscale(1);
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.partners-grid:hover {
+  filter: grayscale(0.4);
+  opacity: 0.8;
+}
+
+.partner-logo {
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--gray-700);
+  cursor: default;
+}
+
+@media (max-width: 480px) {
+  .reco-container { margin-top: -30px; }
+  .partners-grid { gap: 1.5rem; }
+  .partner-logo { font-size: 0.9rem; }
+}
 
 /* AJUSTES PARA MÓVILES (Optimización Samsung A13 y similares) */
 @media (max-width: 480px) {
