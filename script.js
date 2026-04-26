@@ -1,4 +1,4 @@
-// --- CONFIGURACIÓN ---
+﻿// --- CONFIGURACIÓN ---
 var currentQuery = '';
 var userLocationData = { city: '', country_name: 'Colombia', country_code: 'CO' };
 
@@ -21,7 +21,7 @@ async function detectLocation() {
     const data = await res.json();
     if (data.cityName) {
       userLocationData = { city: data.cityName, country_name: data.countryName, country_code: data.countryCode };
-      if(document.getElementById('userCity')) document.getElementById('userCity').textContent = `${data.cityName}, ${data.countryCode}`;
+      if(document.getElementById('userCity')) document.getElementById('userCity').textContent = data.cityName + ', ' + data.countryCode;
     }
   } catch (e) { console.log("Error detectando ubicación"); }
 }
@@ -51,36 +51,37 @@ function renderProducts(items, query) {
     if(status) status.textContent = 'Sin resultados';
     return;
   }
-  if(status) status.textContent = `${items.length} ofertas encontradas`;
+  if(status) status.textContent = items.length + ' ofertas encontradas';
   grid.innerHTML = '<div class="products-grid">' + items.map(item => createProductCard(item)).join('') + '</div>';
 }
 
 function createProductCard(item) {
   const itemData = encodeURIComponent(JSON.stringify(item));
-  return `
-    <div class="product-card" onclick="openAnalytics('${itemData}')">
-      <img class="product-img" src="${item.thumbnail}" alt="${item.title}">
+  return 
+    <div class="product-card" onclick="openAnalytics('')">
+      <img class="product-img" src="" alt="">
       <div class="product-info">
-        <div class="product-store">${item.source || 'Tienda'}</div>
-        <div class="product-title">${item.title}</div>
-        <div class="product-price">${item.price}</div>
+        <div class="product-store"></div>
+        <div class="product-title"></div>
+        <div class="product-price"></div>
         <div style="margin-top:10px; font-size:0.65rem; color:var(--blue-mid); font-weight:700;">VER TENDENCIA 📈</div>
       </div>
-    </div>`;
+    </div>;
 }
 
 async function doSearch(query) {
   if (!query) return;
   showLoader();
-  const locationParam = userLocationData.city ? `${userLocationData.city}, ${userLocationData.country_name}` : userLocationData.country_name;
+  const locationParam = userLocationData.city ? userLocationData.city + ', ' + userLocationData.country_name : userLocationData.country_name;
   try {
-    const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&location=${encodeURIComponent(locationParam)}&gl=co`);
+    const res = await fetch('/api/search?q=' + encodeURIComponent(query) + '&location=' + encodeURIComponent(locationParam) + '&gl=co');
     const data = await res.json();
     if (data.shopping_results) saveToHistory(data.shopping_results[0]);
     renderProducts(data.shopping_results || [], query);
   } catch (e) {
     hideLoader();
-    document.getElementById('productsGrid').innerHTML = '<div class="error-box"><p>Error de conexión.</p></div>';
+    const grid = document.getElementById('productsGrid');
+    if(grid) grid.innerHTML = '<div class="error-box"><p>Error de conexión.</p></div>';
   }
 }
 
@@ -97,15 +98,19 @@ function populateFeed() {
   const recoItems = [...history, ...MOCK_PRODUCTS].slice(0, 3);
   const grid = document.getElementById('recoGrid');
   if(grid) {
-    grid.innerHTML = recoItems.map(item => `
-      <div class="reco-card" onclick="doSearch('${item.title.replace(/'/g, "\\'")}')">
-        <img src="${item.thumbnail || item.image}" class="reco-img">
-        <div class="reco-info">
-          <div class="reco-name">${item.title}</div>
-          <div class="reco-new-price">${formatPrice((item.extracted_price || 100000) * 0.88)}</div>
+    grid.innerHTML = recoItems.map(item => {
+      const itemData = encodeURIComponent(JSON.stringify(item));
+      return 
+        <div class="reco-card" onclick="openAnalytics('')">
+          <img src="" class="reco-img">
+          <div class="reco-info">
+            <div class="reco-name"></div>
+            <div class="reco-new-price"></div>
+            <div style="font-size:0.6rem; color:var(--blue-mid); margin-top:5px; font-weight:700;">VER ANALÍTICA 📈</div>
+          </div>
         </div>
-      </div>
-    `).join('');
+      ;
+    }).join('');
     document.getElementById('recoSection').style.display = 'block';
   }
   
@@ -123,7 +128,6 @@ function openAnalytics(encodedData) {
   document.getElementById('anaPrice').textContent = product.price;
   document.getElementById('anaStore').textContent = product.source || 'Tienda Oficial';
   
-  // Galería de Imágenes Reales (Prioridad)
   const gallery = document.getElementById('anaGallery');
   let images = [product.thumbnail];
   
@@ -133,9 +137,8 @@ function openAnalytics(encodedData) {
     images = [...images, ...product.related_images.map(img => img.link)].slice(0, 3);
   }
   
-  // Limpiar la galería si solo hay una imagen o poblarla si hay más
   if (images.length > 1) {
-    gallery.innerHTML = images.map(img => `<img src="${img}" class="gallery-thumb" onclick="document.getElementById('anaImg').src='${img}'">`).join('');
+    gallery.innerHTML = images.map(img => '<img src="' + img + '" class="gallery-thumb" onclick="document.getElementById(\'anaImg\').src=\'' + img + '\'">').join('');
     gallery.style.display = 'flex';
   } else {
     gallery.innerHTML = '';
@@ -167,37 +170,42 @@ function updateChart(period) {
   const width = 500;
   const height = 200;
 
-  xAxis.innerHTML = labels.map(l => `<span>${l}</span>`).join('');
+  xAxis.innerHTML = labels.map(l => '<span>' + l + '</span>').join('');
   dataPoints.innerHTML = '';
 
   for (let i = 0; i < pointsCount; i++) {
     const x = (i / (pointsCount - 1)) * width;
     const y = 40 + Math.random() * (height - 80);
-    points.push({x, y});
+    points.push({x: x, y: y});
 
-    // Crear Punto Visual (Div)
     const dot = document.createElement('div');
     dot.className = 'chart-data-point';
-    dot.style.left = `${(x / width) * 100}%`;
-    dot.style.top = `${(y / height) * 100}%`;
+    dot.style.left = ((x / width) * 100) + '%';
+    dot.style.top = ((y / height) * 100) + '%';
     dataPoints.appendChild(dot);
   }
 
-  let d = `M ${points[0].x} ${points[0].y}`;
+  let d = 'M ' + points[0].x + ' ' + points[0].y;
   for (let i = 1; i < points.length; i++) {
-    d += ` L ${points[i].x} ${points[i].y}`;
+    d += ' L ' + points[i].x + ' ' + points[i].y;
   }
 
   path.setAttribute('d', d);
-  fill.setAttribute('d', d + ` L ${width} ${height} L 0 ${height} Z`);
+  fill.setAttribute('d', d + ' L ' + width + ' ' + height + ' L 0 ' + height + ' Z');
   
   document.querySelectorAll('.time-btn').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('data-period') === period);
   });
 }
 
-function closeAnalytics() { document.getElementById('analyticsModal').style.display = 'none'; }
-function formatPrice(v) { return new Intl.NumberFormat('es-CO', { style:'currency', currency:'COP', maximumFractionDigits:0 }).format(v); }
+function closeAnalytics() { 
+  const modal = document.getElementById('analyticsModal');
+  if(modal) modal.style.display = 'none'; 
+}
+
+function formatPrice(v) { 
+  return new Intl.NumberFormat('es-CO', { style:'currency', currency:'COP', maximumFractionDigits:0 }).format(v); 
+}
 
 window.addEventListener('DOMContentLoaded', () => {
   detectLocation();
@@ -205,7 +213,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const searchBtn = document.getElementById('btnProduct');
   const searchInput = document.getElementById('productInput');
-  if(searchBtn) searchBtn.onclick = () => doSearch(searchInput.value);
+  if(searchBtn && searchInput) searchBtn.onclick = () => doSearch(searchInput.value);
   if(searchInput) searchInput.onkeydown = (e) => { if (e.key === 'Enter') doSearch(e.target.value); };
 
   document.querySelectorAll('.time-btn').forEach(btn => {
@@ -237,11 +245,14 @@ function executePurchase() {
   setTimeout(() => {
     overlay.style.display = 'none';
     closeAnalytics();
-    // Volver al inicio (limpiar b�squeda)
-    document.getElementById('productInput').value = '';
-    document.getElementById('productsGrid').innerHTML = '';
-    document.getElementById('placeholder').style.display = 'flex';
-    document.getElementById('resultsStatus').textContent = 'Esperando b�squeda...';
+    const input = document.getElementById('productInput');
+    if(input) input.value = '';
+    const grid = document.getElementById('productsGrid');
+    if(grid) grid.innerHTML = '';
+    const placeholder = document.getElementById('placeholder');
+    if(placeholder) placeholder.style.display = 'flex';
+    const status = document.getElementById('resultsStatus');
+    if(status) status.textContent = 'Esperando búsqueda...';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 2500);
 }
