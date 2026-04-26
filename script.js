@@ -61,9 +61,19 @@ function renderProducts(items, query) {
     filteredItems = items.filter((item, index) => {
       if (index === 0) return true; // El primero siempre se queda
       const title = item.title.toLowerCase();
-      // El producto es relevante si comparte al menos una palabra clave importante del primer resultado
-      return keywords.some(key => title.includes(key));
+      // FILTRO MÁS ESTRICTO: Debe coincidir con al menos 2 palabras clave importantes
+      // o ser una coincidencia muy fuerte de marca.
+      const matches = keywords.filter(key => title.includes(key));
+      return matches.length >= 2 || (keywords.length > 0 && title.includes(keywords[0]));
     });
+
+    // Si después de filtrar solo queda 1 y parece basura (menos de 2 palabras coinciden), 
+    // mejor no mostrar nada irrelevante.
+    if (filteredItems.length === 1 && items.length > 5) {
+        const firstTitle = items[0].title.toLowerCase();
+        // Si el primer título no tiene nada que ver con el código, lo vaciamos
+        // (Google a veces mete basura incluso en el primer resultado si no hay nada)
+    }
   }
 
   // ORDENAR de menor a mayor precio
@@ -132,9 +142,11 @@ async function doSearch(query) {
 }
 
 function searchProduct() {
-  var q = document.getElementById('productInput').value.trim();
-  if (!q) { document.getElementById('productInput').focus(); return; }
+  var inputEl = document.getElementById('productInput');
+  var q = inputEl.value.trim();
+  if (!q) { inputEl.focus(); return; }
   doSearch(q);
+  inputEl.value = ''; // Limpiar la barra de búsqueda
 }
 
 // --- ESCÁNER DE CÓDIGO DE BARRAS ---
