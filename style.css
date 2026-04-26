@@ -68,38 +68,55 @@ header{background:linear-gradient(135deg,var(--blue-deep) 0%,#1e4ed8 60%,#2563eb
 .hero-input-wrap input:focus { border-color: var(--blue-mid); box-shadow: 0 0 0 4px var(--blue-pale); }
 .btn-hero { padding: 0 2.5rem; border-radius: 100px; font-weight: 700; font-size: 1rem; }
 
-/* MODAL SPLIT VIEW */
+/* MODAL SPLIT VIEW - CORRECCIÓN LADO A LADO */
 .split-modal-content {
-  max-width: 1000px !important;
-  display: flex;
+  max-width: 1100px !important;
+  width: 95% !important;
+  display: flex !important;
+  flex-direction: row !important; /* Forzamos horizontal */
   padding: 0 !important;
   overflow: hidden;
+  height: auto;
+  max-height: 90vh;
 }
 .split-left {
-  flex: 1;
+  flex: 0 0 380px; /* Ancho fijo para el producto */
   background: var(--gray-50);
-  padding: 2rem;
+  padding: 2.5rem;
   border-right: 1px solid var(--gray-200);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .split-right {
-  flex: 1.2;
-  padding: 2rem;
+  flex: 1;
+  padding: 2.5rem;
   background: white;
+  display: flex;
+  flex-direction: column;
 }
 .split-product-img {
   width: 100%;
-  height: 250px;
+  max-height: 280px;
   object-fit: contain;
   background: white;
   border-radius: 20px;
   padding: 20px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
 .split-current-price {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 800;
   color: var(--blue-deep);
-  margin-bottom: 1rem;
+}
+
+@media (max-width: 950px) {
+  .split-modal-content { 
+    flex-direction: column !important; 
+    max-width: 500px !important;
+  }
+  .split-left { border-right: none; border-bottom: 1px solid var(--gray-200); flex: none; }
 }
 
 .results-full-width {
