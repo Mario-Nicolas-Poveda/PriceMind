@@ -1,6 +1,4 @@
 // --- CONFIGURACIÓN ---
-const SERPAPI_KEY = 'b6f2f89ceeb8148595b8974bbb32dfd70f9846173401c7235f9d7016f471ef43'; 
-
 var currentQuery = '';
 var userLocationData = {
   city: '',
@@ -8,7 +6,6 @@ var userLocationData = {
   country_code: 'CO'
 };
 
-const PROXY = 'https://corsproxy.io/?';
 
 // 1. DETECTAR UBICACIÓN
 async function detectLocation() {
@@ -95,11 +92,11 @@ async function doSearch(query) {
 
   const locationParam = userLocationData.city ? `${userLocationData.city}, ${userLocationData.country_name}` : userLocationData.country_name;
   
-  // Añadimos &sort_by=pd para pedir a Google que ordene por precio bajo (Price: low to high)
-  const targetUrl = `https://serpapi.com/search.json?engine=google_shopping&q=${encodeURIComponent(query)}&location=${encodeURIComponent(locationParam)}&hl=es&gl=${userLocationData.country_code.toLowerCase()}&sort_by=pd&api_key=${SERPAPI_KEY}`;
+  // Llamamos a nuestro propio backend en Vercel
+  const targetUrl = `/api/search?q=${encodeURIComponent(query)}&location=${encodeURIComponent(locationParam)}&hl=es&gl=${userLocationData.country_code.toLowerCase()}&sort_by=pd`;
 
   try {
-    const res = await fetch(PROXY + encodeURIComponent(targetUrl));
+    const res = await fetch(targetUrl);
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     renderProducts(data.shopping_results || [], query);
