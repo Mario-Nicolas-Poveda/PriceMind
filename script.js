@@ -27,25 +27,31 @@ async function detectLocation() {
 }
 
 function showLoader() {
-  document.getElementById('placeholder').style.display = 'none';
-  document.getElementById('loader').style.display = 'flex';
-  document.getElementById('productsGrid').innerHTML = '';
+  const p = document.getElementById('placeholder');
+  const l = document.getElementById('loader');
+  const g = document.getElementById('productsGrid');
+  if(p) p.style.display = 'none';
+  if(l) l.style.display = 'flex';
+  if(g) g.innerHTML = '';
 }
 
 function hideLoader() {
-  document.getElementById('loader').style.display = 'none';
+  const l = document.getElementById('loader');
+  if(l) l.style.display = 'none';
 }
 
 function renderProducts(items, query) {
   hideLoader();
   const grid = document.getElementById('productsGrid');
   const status = document.getElementById('resultsStatus');
+  if(!grid) return;
+
   if(!items || items.length === 0) {
     grid.innerHTML = '<div class="error-box"><p>No se encontraron ofertas.</p></div>';
-    status.textContent = 'Sin resultados';
+    if(status) status.textContent = 'Sin resultados';
     return;
   }
-  status.textContent = `${items.length} ofertas encontradas`;
+  if(status) status.textContent = `${items.length} ofertas encontradas`;
   grid.innerHTML = '<div class="products-grid">' + items.map(item => createProductCard(item)).join('') + '</div>';
 }
 
@@ -116,16 +122,42 @@ function openAnalytics(encodedData) {
   document.getElementById('anaTitle').textContent = product.title;
   document.getElementById('anaPrice').textContent = product.price;
   document.getElementById('anaStore').textContent = product.source || 'Tienda Oficial';
-  document.getElementById('buyBtn').href = product.link || '#';
   
   const price = product.extracted_price || 100000;
   document.getElementById('minPrice').textContent = formatPrice(price * 0.85);
   document.getElementById('avgPrice').textContent = formatPrice(price * 1.05);
   
-  const bars = document.getElementById('chartBars');
-  bars.innerHTML = Array(10).fill(0).map(() => `<div class="chart-bar" style="height:${Math.random()*70 + 20}%" data-val="$${Math.floor(Math.random()*100+100)}k"></div>`).join('');
-  
+  updateChart('dia');
   modal.style.display = 'flex';
+}
+
+function updateChart(period) {
+  const path = document.getElementById('chartPath');
+  const fill = document.getElementById('chartFill');
+  if(!path || !fill) return;
+
+  const pointsCount = period === 'dia' ? 8 : period === 'semana' ? 12 : 18;
+  const points = [];
+  const width = 500;
+  const height = 200;
+
+  for (let i = 0; i <= pointsCount; i++) {
+    const x = (i / pointsCount) * width;
+    const y = 40 + Math.random() * (height - 80);
+    points.push({x, y});
+  }
+
+  let d = `M ${points[0].x} ${points[0].y}`;
+  for (let i = 1; i < points.length; i++) {
+    d += ` L ${points[i].x} ${points[i].y}`;
+  }
+
+  path.setAttribute('d', d);
+  fill.setAttribute('d', d + ` L ${width} ${height} L 0 ${height} Z`);
+  
+  document.querySelectorAll('.time-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-period') === period);
+  });
 }
 
 function closeAnalytics() { document.getElementById('analyticsModal').style.display = 'none'; }
@@ -134,19 +166,29 @@ function formatPrice(v) { return new Intl.NumberFormat('es-CO', { style:'currenc
 window.addEventListener('DOMContentLoaded', () => {
   detectLocation();
   populateFeed();
-  document.getElementById('btnProduct').onclick = () => doSearch(document.getElementById('productInput').value);
-  document.getElementById('productInput').onkeydown = (e) => { if (e.key === 'Enter') doSearch(e.target.value); };
-  
-  // Scanner Simple
-  document.getElementById('cameraStartBtn').onclick = () => {
-     document.getElementById('scannerModal').style.display = 'flex';
-     const scanner = new Html5Qrcode("reader");
-     scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (text) => {
-       scanner.stop();
-       document.getElementById('scannerModal').style.display = 'none';
-       document.getElementById('productInput').value = text;
-       doSearch(text);
-     });
-     document.getElementById('closeScanner').onclick = () => { scanner.stop(); document.getElementById('scannerModal').style.display = 'none'; };
-  };
+
+  const searchBtn = document.getElementById('btnProduct');
+  const searchInput = document.getElementById('productInput');
+  if(searchBtn) searchBtn.onclick = () => doSearch(searchInput.value);
+  if(searchInput) searchInput.onkeydown = (e) => { if (e.key === 'Enter') doSearch(e.target.value); };
+
+  document.querySelectorAll('.time-btn').forEach(btn => {
+    btn.onclick = () => updateChart(btn.getAttribute('data-period'));
+  });
+
+  const cameraBtn = document.getElementById('cameraStartBtn');
+  if(cameraBtn) {
+    cameraBtn.onclick = () => {
+      document.getElementById('scannerModal').style.display = 'flex';
+      const scanner = new Html5Qrcode("reader");
+      scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (text) => {
+        scanner.stop();
+        document.getElementById('scannerModal').style.display = 'none';
+        if(searchInput) searchInput.value = text;
+        doSearch(text);
+      });
+      const closeS = document.getElementById('closeScanner');
+      if(closeS) closeS.onclick = () => { scanner.stop(); document.getElementById('scannerModal').style.display = 'none'; };
+    };
+  }
 });
