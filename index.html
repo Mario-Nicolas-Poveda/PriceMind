@@ -122,22 +122,12 @@
   <!-- MODAL DE ANÁLISIS SPLIT VIEW -->
   <div class="scanner-modal" id="analyticsModal">
     <div class="scanner-content split-modal-content">
-      <div class="split-left">
-        <div class="scanner-header">
-          <h3 id="anaTitle">Producto</h3>
-        </div>
-        <div class="product-detail-hero">
-          <img src="" id="anaImg" class="split-product-img">
-          <div class="split-product-meta">
-            <div id="anaStore" class="product-store">Tienda</div>
-            <div id="anaPrice" class="split-current-price">--</div>
-            <div id="anaShipping" class="product-shipping"></div>
-        </div>
-      </div>
+      
+      <!-- LADO IZQUIERDO: ANALÍTICA (Muro Principal) -->
       <div class="split-right">
         <div class="scanner-header">
-          <h3>Analítica</h3>
-          <button class="close-scanner" onclick="closeAnalytics()">×</button>
+          <h3>Panel de Analítica Precios</h3>
+          <button class="close-scanner hp-hide-desktop" onclick="closeAnalytics()">×</button>
         </div>
         <div class="analytics-body">
           <div class="time-selectors" id="timeSelectors">
@@ -169,11 +159,28 @@
             <!-- Labels dinámicos -->
           </div>
           <div class="comparison-list">
-            <div class="comp-box"><span>Mínimo</span><strong id="minPrice">--</strong></div>
-            <div class="comp-box"><span>Promedio</span><strong id="avgPrice">--</strong></div>
+            <div class="comp-box"><span>Mínimo Histórico</span><strong id="minPrice">--</strong></div>
+            <div class="comp-box"><span>Precio Promedio</span><strong id="avgPrice">--</strong></div>
           </div>
         </div>
       </div>
+
+      <!-- LADO DERECHO: PRODUCTO (Referencia) -->
+      <div class="split-left">
+        <div class="scanner-header">
+          <h3 id="anaTitle">Cargando...</h3>
+          <button class="close-scanner" onclick="closeAnalytics()">×</button>
+        </div>
+        <div class="product-detail-hero">
+          <img src="" id="anaImg" class="split-product-img">
+          <div class="split-product-meta">
+            <div id="anaStore" class="product-store">Tienda</div>
+            <div id="anaPrice" class="split-current-price">--</div>
+            <div id="anaShipping" class="product-shipping" style="text-align:center; margin-top:10px;"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
