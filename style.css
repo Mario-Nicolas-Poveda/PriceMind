@@ -94,7 +94,13 @@ footer strong{color:rgba(255,255,255,.8)}
 .scanner-header h3 { font-family: 'Sora', sans-serif; font-size: 1rem; color: var(--blue-deep); }
 .close-scanner { background: none; border: none; font-size: 2rem; color: var(--gray-500); cursor: pointer; line-height: 1; }
 #reader { width: 100%; min-height: 300px; background: #000; }
-.scanner-tip { padding: 1.25rem; text-align: center; font-size: 0.85rem; color: var(--gray-500); font-weight: 500; }
+.scanner-tip {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 15px;
+  transition: opacity 0.3s ease;
+}
 #reader__status_span { font-size: 0.75rem !important; }
 #reader video { object-fit: cover !important; }
 

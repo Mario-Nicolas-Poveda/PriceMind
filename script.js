@@ -121,6 +121,30 @@ function searchProduct() {
 
 // --- ESCÁNER DE CÓDIGO DE BARRAS ---
 let html5QrCode;
+let cameras = [];
+let currentCameraIndex = 0;
+let tipInterval;
+
+const scannerTips = [
+  "Centra el código de barras",
+  "Acerca un poco más el celular",
+  "Asegúrate de tener buena luz",
+  "Mantén el pulso firme",
+  "Aleja lentamente el dispositivo"
+];
+
+function updateScannerTip() {
+  const tipEl = document.getElementById('scannerTip');
+  let i = 0;
+  tipInterval = setInterval(() => {
+    i = (i + 1) % scannerTips.length;
+    tipEl.style.opacity = 0;
+    setTimeout(() => {
+      tipEl.textContent = scannerTips[i];
+      tipEl.style.opacity = 1;
+    }, 300);
+  }, 4000);
+}
 
 async function startScanner() {
   document.getElementById('scannerModal').style.display = 'flex';
@@ -143,17 +167,23 @@ async function startScanner() {
   };
 
   try {
-    // Intentar iniciar con la cámara trasera (environment)
-    await html5QrCode.start(
-      { facingMode: "environment" }, 
-      config,
-      (decodedText) => {
-        // ÉXITO: Código detectado
-        stopScanner();
-        document.getElementById('productInput').value = decodedText;
-        doSearch(decodedText);
+    // Obtener todas las cámaras disponibles
+    cameras = await Html5Qrcode.getCameras();
+    
+    if (cameras && cameras.length > 0) {
+      // Si hay más de una cámara, mostrar botón de cambio
+      if (cameras.length > 1) {
+        document.getElementById('switchCameraBtn').style.display = 'block';
+        // Intentar buscar la cámara trasera por defecto (usualmente al final de la lista)
+        currentCameraIndex = cameras.length - 1;
       }
-    );
+      
+      await startWithCamera(cameras[currentCameraIndex].id);
+      updateScannerTip();
+    } else {
+      alert("No se detectaron cámaras.");
+      stopScanner();
+    }
   } catch (err) {
     console.error("Error al iniciar cámara:", err);
     alert("No se pudo acceder a la cámara. Verifica los permisos.");
@@ -161,7 +191,57 @@ async function startScanner() {
   }
 }
 
+async function startWithCamera(cameraId) {
+  const config = { 
+    fps: 10, 
+    qrbox: { width: 300, height: 180 },
+    aspectRatio: 1.0,
+    formatsToSupport: [ 
+      Html5QrcodeSupportedFormats.EAN_13, 
+      Html5QrcodeSupportedFormats.EAN_8, 
+      Html5QrcodeSupportedFormats.UPC_A, 
+      Html5QrcodeSupportedFormats.CODE_128,
+      Html5QrcodeSupportedFormats.QR_CODE
+    ]
+  };
+
+  if (html5QrCode.isScanning) {
+    await html5QrCode.stop();
+  }
+
+  await html5QrCode.start(
+    cameraId, 
+    config,
+    (decodedText) => {
+      stopScanner();
+      document.getElementById('productInput').value = decodedText;
+      doSearch(decodedText);
+    }
+  );
+}
+
+async function switchCamera() {
+  if (cameras.length > 1) {
+    currentCameraIndex = (currentCameraIndex + 1) % cameras.length;
+    const btn = document.getElementById('switchCameraBtn');
+    btn.disabled = true;
+    btn.textContent = "Cambiando...";
+    
+    try {
+      await startWithCamera(cameras[currentCameraIndex].id);
+    } catch (err) {
+      console.error("Error al cambiar de cámara", err);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;"><path d="M21 7v6h-6"></path><path d="M3 17v-6h6"></path><path d="M3 17a9 9 0 0 1 14.82-6.82L21 13"></path><path d="M21 7a9 9 0 0 0-14.82 6.82L3 11"></path></svg>
+        Cambiar Lente`;
+    }
+  }
+}
+
 function stopScanner() {
+  clearInterval(tipInterval);
   if (html5QrCode && html5QrCode.isScanning) {
     html5QrCode.stop().then(() => {
       document.getElementById('scannerModal').style.display = 'none';
@@ -171,9 +251,10 @@ function stopScanner() {
   }
 }
 
-// Event Listeners para el escéner
+// Event Listeners para el escáner
 document.getElementById('cameraStartBtn').addEventListener('click', startScanner);
 document.getElementById('closeScanner').addEventListener('click', stopScanner);
+document.getElementById('switchCameraBtn').addEventListener('click', switchCamera);
 
 document.getElementById('btnProduct').addEventListener('click', searchProduct);
 document.getElementById('productInput').addEventListener('keydown', function(e) {
