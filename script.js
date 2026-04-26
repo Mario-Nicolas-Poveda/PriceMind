@@ -128,6 +128,12 @@ async function doSearch(query) {
     const res = await fetch(targetUrl);
     const data = await res.json();
     if (data.error) throw new Error(data.error);
+    
+    // GUARDAR EN HISTORIAL (para recomendaciones)
+    if (data.shopping_results && data.shopping_results.length > 0) {
+      saveToHistory(data.shopping_results[0]);
+    }
+    
     renderProducts(data.shopping_results || [], query);
   } catch (err) {
     console.error('Error en búsqueda:', err);
@@ -299,4 +305,48 @@ document.querySelectorAll('.tip-chip').forEach(chip => {
   });
 });
 
-window.addEventListener('DOMContentLoaded', detectLocation);
+// --- PERSISTENCIA Y RECOMENDACIONES ---
+function saveToHistory(product) {
+  const historyData = {
+    name: product.title,
+    price: product.price,
+    extracted_price: product.extracted_price,
+    image: product.thumbnail,
+    timestamp: Date.now()
+  };
+  localStorage.setItem('lastSearch', JSON.stringify(historyData));
+}
+
+function loadRecommendations() {
+  const lastSearch = localStorage.getItem('lastSearch');
+  if (!lastSearch) return;
+
+  const data = JSON.parse(lastSearch);
+  const recoSection = document.getElementById('recoSection');
+  const recoCard = document.getElementById('recoCard');
+
+  // Simulamos una oferta (bajamos el precio un 10-15%)
+  const discount = 0.12;
+  const newPriceValue = Math.floor(data.extracted_price * (1 - discount));
+  const newPriceFormatted = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(newPriceValue);
+
+  recoCard.innerHTML = `
+    <img src="${data.image}" class="reco-img" alt="${data.name}">
+    <div class="reco-info">
+      <div class="reco-name">${data.name}</div>
+      <div class="reco-price-row">
+        <span class="reco-new-price">${newPriceFormatted}</span>
+        <span class="reco-old-price">${data.price}</span>
+        <span class="reco-save-label">¡Baja de precio!</span>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="window.location.reload();" style="width:auto; padding: 0.5rem 1rem; font-size: 0.75rem;">Ver Oferta</button>
+  `;
+
+  recoSection.style.display = 'block';
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  detectLocation();
+  loadRecommendations();
+});
