@@ -350,6 +350,58 @@ footer strong{color:rgba(255,255,255,.8)}
   .reco-price-row { justify-content: center; }
 }
 
+/* ANALYTICS CHART STYLES */
+.chart-grid-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gray-100);
+  pointer-events: none;
+}
+.time-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--gray-300);
+  background: white;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.time-btn.active, .time-btn:hover {
+  background: var(--blue-mid);
+  color: white;
+  border-color: var(--blue-mid);
+}
+.chart-bar {
+  flex: 1;
+  background: linear-gradient(180deg, var(--blue-mid), var(--blue-light));
+  border-radius: 4px 4px 0 0;
+  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s;
+  position: relative;
+  min-width: 15px;
+}
+.chart-bar:hover {
+  background: var(--blue-deep);
+}
+.chart-bar::after {
+  content: attr(data-val);
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--blue-mid);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.chart-bar:hover::after {
+  opacity: 1;
+}
+
 /* Breakpoint visibility */
 @media (max-width: 390px) { 
   .hp-hide-mobile { display: none !important; }

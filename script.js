@@ -92,22 +92,46 @@ function renderProducts(items, query) {
     var price = item.price || '';
     var store = item.source || 'Tienda';
     var img = item.thumbnail || '';
-    var link = item.link || '#';
     var delivery = item.delivery || '';
+    
+    // Serializamos el item para pasarlo a la función de analítica
+    const itemData = encodeURIComponent(JSON.stringify(item));
 
     html += `
-      <a class="product-card" href="${link}" target="_blank" rel="noopener">
+      <div class="product-card" onclick="openAnalytics('${itemData}')">
         <img class="product-img" src="${img}" alt="${title}" loading="lazy">
         <div class="product-info">
           <div class="product-store">${store}</div>
           <div class="product-title">${title}</div>
           <div class="product-price">${price}</div>
           ${delivery ? `<div class="product-shipping" style="color:var(--green)">${delivery}</div>` : ''}
+          <div style="margin-top:10px; font-size:0.65rem; color:var(--blue-mid); font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Ver Tendencia 📈</div>
         </div>
-      </a>`;
+      </div>`;
   }
 
   html += '</div>';
+
+  // Añadimos las funciones globales necesarias si no existen
+  window.openAnalytics = function(encodedData) {
+    const product = JSON.parse(decodeURIComponent(encodedData));
+    const modal = document.getElementById('analyticsModal');
+    document.getElementById('anaImg').src = product.thumbnail;
+    document.getElementById('anaTitle').textContent = product.title;
+    document.getElementById('anaPrice').textContent = product.price;
+
+    // Mock de precios histórico
+    const currentPrice = product.extracted_price || 100000;
+    document.getElementById('minPrice').textContent = formatPrice(currentPrice * 0.82);
+    document.getElementById('avgPrice').textContent = formatPrice(currentPrice * 1.08);
+
+    updateChart();
+    modal.style.display = 'flex';
+  };
+
+  window.closeAnalytics = function() {
+    document.getElementById('analyticsModal').style.display = 'none';
+  };
   grid.innerHTML = html;
 }
 
@@ -304,6 +328,58 @@ document.querySelectorAll('.tip-chip').forEach(chip => {
     doSearch(term);
   });
 });
+
+// --- SISTEMA DE ANALÍTICA DE PRECIOS (MOCK) ---
+function openAnalytics(product) {
+  const modal = document.getElementById('analyticsModal');
+  document.getElementById('anaImg').src = product.thumbnail;
+  document.getElementById('anaTitle').textContent = product.title;
+  document.getElementById('anaPrice').textContent = product.price;
+
+  // Mock de precios histórico
+  const currentPrice = product.extracted_price || 100000;
+  document.getElementById('minPrice').textContent = formatPrice(currentPrice * 0.85);
+  document.getElementById('avgPrice').textContent = formatPrice(currentPrice * 1.05);
+
+  updateChart();
+  modal.style.display = 'flex';
+}
+
+function closeAnalytics() {
+  document.getElementById('analyticsModal').style.display = 'none';
+}
+
+function updateChart() {
+  const container = document.getElementById('chartBars');
+  container.innerHTML = '';
+  
+  // Generamos 12 barras con alturas aleatorias
+  for (let i = 0; i < 12; i++) {
+    const height = Math.floor(Math.random() * 75) + 20; // 20% a 95%
+    const bar = document.createElement('div');
+    bar.className = 'chart-bar';
+    bar.style.height = height + '%';
+    
+    // Etiqueta de precio simulada al pasar el mouse
+    const simPrice = Math.floor(Math.random() * 50000) + 100000;
+    bar.setAttribute('data-val', '$' + (simPrice/1000).toFixed(1) + 'k');
+    
+    container.appendChild(bar);
+  }
+
+  // Cambiar estado activo de botones (simple)
+  document.querySelectorAll('.time-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateChart();
+    };
+  });
+}
+
+function formatPrice(val) {
+  return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(val);
+}
 
 // --- PERSISTENCIA Y RECOMENDACIONES ---
 function saveToHistory(product) {
