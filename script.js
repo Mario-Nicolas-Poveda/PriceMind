@@ -123,13 +123,21 @@ function openAnalytics(encodedData) {
   document.getElementById('anaPrice').textContent = product.price;
   document.getElementById('anaStore').textContent = product.source || 'Tienda Oficial';
   
-  // Galería de 3 Imágenes
+  // Galería de Imágenes Reales (Prioridad)
   const gallery = document.getElementById('anaGallery');
-  const images = [
-    product.thumbnail,
-    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop", // Placeholder 1
-    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop"  // Placeholder 2
-  ];
+  let images = [product.thumbnail];
+  
+  // Intentar extraer imágenes adicionales de la API si existen
+  if (product.images && Array.isArray(product.images)) {
+    images = [...images, ...product.images].slice(0, 3);
+  } else if (product.related_images && Array.isArray(product.related_images)) {
+    images = [...images, ...product.related_images.map(img => img.link)].slice(0, 3);
+  } else {
+    // Fallback con imágenes temáticas si la API no devuelve más para este item específico
+    images.push("https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop");
+    images.push("https://images.unsplash.com/photo-1542491595-3004b44c582d?w=400&h=400&fit=crop");
+  }
+  
   gallery.innerHTML = images.map(img => `<img src="${img}" class="gallery-thumb" onclick="document.getElementById('anaImg').src='${img}'">`).join('');
 
   const price = product.extracted_price || 100000;
