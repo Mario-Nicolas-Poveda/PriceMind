@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta name="referrer" content="no-referrer">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PriceMind - Comparador Inteligente de Precios</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&amp;family=DM+Sans:wght@400;500&amp;display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="#">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 6v6l4 2"></path>
+          </svg>
+        </div>
+        <div>
+          <span class="logo-text">PriceMind</span>
+          <span class="logo-sub">Comparador Inteligente de Precios</span>
+        </div>
+      </a>
+      <div class="location-badge" id="locationBadge">
+        <div class="location-dot"></div>
+        <span id="userCity">Detectando ubicación...</span>
+      </div>
+      <div class="header-badge hp-hide-mobile">Encuentra las mejores ofertas</div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-eyebrow">Inteligencia de Precios</div>
+    <h1>Compara precios<br><span>en segundos</span></h1>
+    <p>Busca por nombre de producto o código de barras y encuentra las mejores ofertas reales.</p>
+  </section>
+
+  <section class="search-section">
+    <div class="search-wrapper">
+      <div class="search-card">
+        <div class="card-icon blue">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </div>
+        <div class="card-label">Google Shopping</div>
+        <div class="card-title">Comparar en Google</div>
+        <div class="input-wrap">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" id="productInput" placeholder="Ej: &quot;iPhone 15 Pro&quot;">
+          <button class="camera-btn" id="cameraStartBtn" title="Escanear código de barras">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+          </button>
+        </div>
+        <button class="btn btn-primary" id="btnProduct">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          Buscar Producto
+        </button>
+      </div>
+
+      <div class="search-card">
+        <div class="card-icon indigo">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4338ca" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="2" height="16"></rect>
+            <rect x="7" y="4" width="1" height="16"></rect>
+            <rect x="10" y="4" width="2" height="16"></rect>
+            <rect x="14" y="4" width="1" height="16"></rect>
+            <rect x="17" y="4" width="3" height="16"></rect>
+          </svg>
+        </div>
+        <div class="card-label">Búsqueda Avanzada</div>
+        <div class="card-title">Encuentra el mejor precio</div>
+        <p style="font-size: 0.85rem; color: var(--gray-500); line-height: 1.5; margin-bottom: 1.2rem;">
+          Estamos analizando miles de tiendas populares para mostrarte solo los comercios con mejor reputación.
+        </p>
+        <div class="tip-chip" style="width: 100%; text-align: center; border-style: dashed;">Ver tiendas aliadas</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="results-section">
+    <div class="results-header">
+      <div class="results-title">Resultados</div>
+      <div class="results-status" id="resultsStatus">Esperando búsqueda...</div>
+    </div>
+    <div class="results-box" id="resultsBox">
+      <div class="placeholder" id="placeholder">
+        <div class="placeholder-icon">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </div>
+        <div class="placeholder-title">Inicia tu búsqueda de precios</div>
+        <div class="placeholder-text">Escribe el nombre de un producto o código de barras y haz clic en Buscar. Los
+          resultados aparecerán aquí.</div>
+      </div>
+      <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <div class="loader-text">Buscando los mejores precios...</div>
+      </div>
+      <div id="productsGrid"></div>
+    </div>
+
+    <div class="tips-row">
+      <span class="tip-chip" id="chip1">iPhone 15 Pro</span>
+      <span class="tip-chip" id="chip2">Sony WH-1000XM5</span>
+      <span class="tip-chip" id="chip3">Samsung Galaxy S24</span>
+      <span class="tip-chip" id="chip4">Nike Air Max</span>
+      <span class="tip-chip" id="chip5">MacBook Air M3</span>
+    </div>
+  </section>
+
+  <footer>
+    <strong>PriceMind</strong> — Comparador Inteligente de Precios &nbsp;•&nbsp; Resultados en tiempo real via Google Shopping
+  </footer>
+
+  <script src="script.js" defer></script>
+
+  <!-- MODAL DE ESCÁNER -->
+  <div class="scanner-modal" id="scannerModal">
+    <div class="scanner-content">
+      <div class="scanner-header">
+        <h3>Escaneando Código</h3>
+        <button class="close-scanner" id="closeScanner">×</button>
+      </div>
+      <div id="reader"></div>
+      <p class="scanner-tip">Coloca el código de barras frente a la cámara</p>
+    </div>
+  </div>
+</body>
+
+</html>
