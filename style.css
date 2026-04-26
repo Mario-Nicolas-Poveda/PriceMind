@@ -38,7 +38,6 @@ header{background:linear-gradient(135deg,var(--blue-deep) 0%,#1e4ed8 60%,#2563eb
 .card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem}
 .card-icon.blue{background:var(--blue-ghost)}
 .card-icon.indigo{background:#e0e7ff}
-.card-label{font-family:'Sora',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-mid);margin-bottom:.35rem}
 .card-title{font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;color:var(--blue-deep);margin-bottom:1rem;letter-spacing:-.01em}
 .country-select{width:100%;padding:.6rem 1rem;border:1.5px solid var(--gray-300);border-radius:var(--radius-sm);font-size:.88rem;font-family:'DM Sans',sans-serif;color:var(--gray-700);background:var(--gray-50);outline:none;margin-bottom:.9rem;cursor:pointer;transition:border-color .2s,box-shadow .2s}
 .country-select:focus{border-color:var(--blue-light);box-shadow:0 0 0 3px rgba(59,130,246,.12)}

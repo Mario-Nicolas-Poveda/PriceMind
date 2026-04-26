@@ -48,18 +48,36 @@ function renderProducts(items, query) {
     return;
   }
 
-  // ORDENAR de menor a mayor precio (usando extracted_price que es numérico)
-  items.sort((a, b) => {
+  // FILTRO INTELIGENTE PARA CÓDIGOS DE BARRAS
+  // Si la búsqueda es solo números y larga (código de barras), filtramos por relevancia
+  const isBarcode = /^\d{8,14}$/.test(query.trim());
+  let filteredItems = items;
+
+  if (isBarcode && items.length > 0) {
+    // Tomamos el primer resultado como referencia de "Verdad"
+    const firstTitle = items[0].title.toLowerCase();
+    const keywords = firstTitle.split(' ').filter(word => word.length > 3); // Solo palabras significativas
+    
+    filteredItems = items.filter((item, index) => {
+      if (index === 0) return true; // El primero siempre se queda
+      const title = item.title.toLowerCase();
+      // El producto es relevante si comparte al menos una palabra clave importante del primer resultado
+      return keywords.some(key => title.includes(key));
+    });
+  }
+
+  // ORDENAR de menor a mayor precio
+  filteredItems.sort((a, b) => {
     const priceA = a.extracted_price || 0;
     const priceB = b.extracted_price || 0;
     return priceA - priceB;
   });
 
-  status.textContent = items.length + ' ofertas ordenadas por precio (Menor a Mayor)';
+  status.textContent = filteredItems.length + ' ofertas encontradas para este producto';
   var html = '<div class="products-grid">';
 
-  for (var i = 0; i < items.length; i++) {
-    var item = items[i];
+  for (var i = 0; i < filteredItems.length; i++) {
+    var item = filteredItems[i];
     var title = item.title || '';
     var price = item.price || '';
     var store = item.source || 'Tienda';
