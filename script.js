@@ -377,6 +377,7 @@ function executePurchase() {
   setTimeout(() => {
     overlay.style.display = 'none';
     closeAnalytics();
+    hideStoresMap();
     const input = document.getElementById('productInput');
     if (input) input.value = '';
     const grid = document.getElementById('productsGrid');
@@ -384,8 +385,7 @@ function executePurchase() {
     const placeholder = document.getElementById('placeholder');
     if (placeholder) placeholder.style.display = 'flex';
     const status = document.getElementById('resultsStatus');
-    if (status) status.textContent = 'Esperando b�squeda...';
+    if (status) status.textContent = 'Esperando búsqueda...';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 4500); // 4.5 segundos para disfrutar la victoria
 }
-
