@@ -178,18 +178,25 @@ header{background:linear-gradient(135deg,var(--blue-deep) 0%,#1e4ed8 60%,#2563eb
   overflow-y: auto;
 }
 
-/* MODAL SPLIT - MÓVIL */
+/* MODAL SPLIT - MÓVIL (Optimizado para Samsung A13) */
 @media (max-width: 768px) {
+  .scanner-modal {
+    padding: 1rem;
+    align-items: flex-start; /* Previene corte superior en pantallas pequeñas */
+    overflow-y: auto;
+  }
   .split-modal-content {
     flex-direction: column !important;
-    height: 90vh !important;
-    width: 96% !important;
-    border-radius: 24px;
-    overflow-y: auto !important;
+    height: auto !important;
+    min-height: min-content;
+    width: 100% !important;
+    margin: auto 0;
+    border-radius: 20px;
+    overflow-y: visible !important;
   }
   .modal-side-chart {
     height: auto;
-    padding: 1.5rem 1.25rem;
+    padding: 1.25rem 1rem;
     flex-shrink: 0;
   }
   .modal-side-product {
@@ -197,17 +204,24 @@ header{background:linear-gradient(135deg,var(--blue-deep) 0%,#1e4ed8 60%,#2563eb
     height: auto;
     border-left: none;
     border-top: 1px solid var(--gray-200);
-    padding: 1.5rem 1.25rem;
+    padding: 1.25rem 1rem;
     overflow-y: visible;
   }
   .main-img-container {
-    height: 200px;
+    height: 180px;
   }
   .chart-wrapper-main {
     margin: 1rem 0 0.5rem;
   }
   .chart-container {
-    height: 160px;
+    height: 140px;
+  }
+  .close-scanner-global {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
   }
 }
 .main-img-container {
