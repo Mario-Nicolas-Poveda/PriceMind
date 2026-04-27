@@ -22,7 +22,7 @@ async function detectLocation() {
     if (data.cityName) {
       userLocationData = { city: data.cityName, country_name: data.countryName, country_code: data.countryCode };
       const el = document.getElementById('userCity');
-      if(el) el.textContent = data.cityName + ', ' + data.countryCode;
+      if (el) el.textContent = data.cityName + ', ' + data.countryCode;
     }
   } catch (e) { console.log("Error detectando ubicación"); }
 }
@@ -31,28 +31,28 @@ function showLoader() {
   const p = document.getElementById('placeholder');
   const l = document.getElementById('loader');
   const g = document.getElementById('productsGrid');
-  if(p) p.style.display = 'none';
-  if(l) l.style.display = 'flex';
-  if(g) g.innerHTML = '';
+  if (p) p.style.display = 'none';
+  if (l) l.style.display = 'flex';
+  if (g) g.innerHTML = '';
 }
 
 function hideLoader() {
   const l = document.getElementById('loader');
-  if(l) l.style.display = 'none';
+  if (l) l.style.display = 'none';
 }
 
 function renderProducts(items, query) {
   hideLoader();
   const grid = document.getElementById('productsGrid');
   const status = document.getElementById('resultsStatus');
-  if(!grid) return;
+  if (!grid) return;
 
-  if(!items || items.length === 0) {
+  if (!items || items.length === 0) {
     grid.innerHTML = '<div class="error-box"><p>No se encontraron ofertas.</p></div>';
-    if(status) status.textContent = 'Sin resultados';
+    if (status) status.textContent = 'Sin resultados';
     return;
   }
-  if(status) status.textContent = items.length + ' ofertas encontradas';
+  if (status) status.textContent = items.length + ' ofertas encontradas';
   grid.innerHTML = '<div class="products-grid">' + items.map(item => createProductCard(item)).join('') + '</div>';
 }
 
@@ -82,12 +82,12 @@ async function doSearch(query) {
   } catch (e) {
     hideLoader();
     const g = document.getElementById('productsGrid');
-    if(g) g.innerHTML = '<div class="error-box"><p>Error de conexión.</p></div>';
+    if (g) g.innerHTML = '<div class="error-box"><p>Error de conexión.</p></div>';
   }
 }
 
 function saveToHistory(product) {
-  if(!product) return;
+  if (!product) return;
   let hist = JSON.parse(localStorage.getItem('searchHistory') || '[]');
   const item = { title: product.title, price: product.price, extracted_price: product.extracted_price, thumbnail: product.thumbnail, source: product.source };
   hist = [item, ...hist.filter(p => p.title !== item.title)].slice(0, 6);
@@ -98,7 +98,7 @@ function populateFeed() {
   const history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
   const recoItems = [...history, ...MOCK_PRODUCTS].slice(0, 3);
   const grid = document.getElementById('recoGrid');
-  if(grid) {
+  if (grid) {
     grid.innerHTML = recoItems.map(item => {
       const itemData = encodeURIComponent(JSON.stringify(item));
       return `
@@ -113,11 +113,11 @@ function populateFeed() {
       `;
     }).join('');
     const sect = document.getElementById('recoSection');
-    if(sect) sect.style.display = 'block';
+    if (sect) sect.style.display = 'block';
   }
-  
+
   const disc = document.getElementById('discoveryGrid');
-  if(disc) {
+  if (disc) {
     disc.innerHTML = MOCK_PRODUCTS.sort(() => 0.5 - Math.random()).map(item => createProductCard(item)).join('');
   }
 }
@@ -125,19 +125,19 @@ function populateFeed() {
 function openAnalytics(encodedData) {
   const product = JSON.parse(decodeURIComponent(encodedData));
   const modal = document.getElementById('analyticsModal');
-  if(!modal) return;
-  
+  if (!modal) return;
+
   document.getElementById('anaImg').src = product.thumbnail;
   document.getElementById('anaTitle').textContent = product.title;
   document.getElementById('anaPrice').textContent = product.price;
   document.getElementById('anaStore').textContent = product.source || 'Tienda Oficial';
-  
+
   const gallery = document.getElementById('anaGallery');
-  if(gallery) {
+  if (gallery) {
     let images = [product.thumbnail];
     if (product.images && Array.isArray(product.images)) images = [...images, ...product.images].slice(0, 3);
     else if (product.related_images && Array.isArray(product.related_images)) images = [...images, ...product.related_images.map(img => img.link)].slice(0, 3);
-    
+
     if (images.length > 1) {
       gallery.innerHTML = images.map(img => `<img src="${img}" class="gallery-thumb" onclick="document.getElementById('anaImg').src='${img}'">`).join('');
       gallery.style.display = 'flex';
@@ -150,7 +150,7 @@ function openAnalytics(encodedData) {
   const price = product.extracted_price || 100000;
   document.getElementById('minPrice').textContent = formatPrice(price * 0.85);
   document.getElementById('avgPrice').textContent = formatPrice(price * 1.05);
-  
+
   updateChart('dia');
   modal.style.display = 'flex';
 }
@@ -160,11 +160,11 @@ function updateChart(period) {
   const fill = document.getElementById('chartFill');
   const xAxis = document.getElementById('xAxis');
   const dataPoints = document.getElementById('chartDataPoints');
-  if(!path || !fill || !xAxis || !dataPoints) return;
+  if (!path || !fill || !xAxis || !dataPoints) return;
 
   let labels = [];
-  if(period === 'dia') labels = ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
-  else if(period === 'semana') labels = ['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'DOM'];
+  if (period === 'dia') labels = ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
+  else if (period === 'semana') labels = ['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'DOM'];
   else labels = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
 
   const pointsCount = labels.length;
@@ -178,7 +178,7 @@ function updateChart(period) {
   for (let i = 0; i < pointsCount; i++) {
     const x = (i / (pointsCount - 1)) * width;
     const y = 40 + Math.random() * (height - 80);
-    points.push({x, y});
+    points.push({ x, y });
 
     const dot = document.createElement('div');
     dot.className = 'chart-data-point';
@@ -194,19 +194,19 @@ function updateChart(period) {
 
   path.setAttribute('d', d);
   fill.setAttribute('d', d + ' L ' + width + ' ' + height + ' L 0 ' + height + ' Z');
-  
+
   document.querySelectorAll('.time-btn').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('data-period') === period);
   });
 }
 
-function closeAnalytics() { 
+function closeAnalytics() {
   const m = document.getElementById('analyticsModal');
-  if(m) m.style.display = 'none'; 
+  if (m) m.style.display = 'none';
 }
 
-function formatPrice(v) { 
-  return new Intl.NumberFormat('es-CO', { style:'currency', currency:'COP', maximumFractionDigits:0 }).format(v); 
+function formatPrice(v) {
+  return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(v);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -215,35 +215,35 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const searchBtn = document.getElementById('btnProduct');
   const searchInput = document.getElementById('productInput');
-  if(searchBtn && searchInput) searchBtn.onclick = () => doSearch(searchInput.value);
-  if(searchInput) searchInput.onkeydown = (e) => { if (e.key === 'Enter') doSearch(e.target.value); };
+  if (searchBtn && searchInput) searchBtn.onclick = () => doSearch(searchInput.value);
+  if (searchInput) searchInput.onkeydown = (e) => { if (e.key === 'Enter') doSearch(e.target.value); };
 
   document.querySelectorAll('.time-btn').forEach(btn => {
     btn.onclick = () => updateChart(btn.getAttribute('data-period'));
   });
 
   const cameraBtn = document.getElementById('cameraStartBtn');
-  if(cameraBtn) {
+  if (cameraBtn) {
     cameraBtn.onclick = () => {
       document.getElementById('scannerModal').style.display = 'flex';
       const scanner = new Html5Qrcode("reader");
       const stopScanner = () => {
-        try { if(scanner.isScanning) scanner.stop(); } catch(e) {}
+        try { if (scanner.isScanning) scanner.stop(); } catch (e) { }
         document.getElementById('scannerModal').style.display = 'none';
       };
       scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (text) => {
         stopScanner();
-        if(searchInput) searchInput.value = text;
+        if (searchInput) searchInput.value = text;
         doSearch(text);
       }).catch(err => console.error('Error camara:', err));
       const closeS = document.getElementById('closeScanner');
-      if(closeS) closeS.onclick = stopScanner;
+      if (closeS) closeS.onclick = stopScanner;
       const captureBtn = document.getElementById('captureBtn');
-      if(captureBtn) {
+      if (captureBtn) {
         captureBtn.onclick = () => {
           stopScanner();
-          const query = 'Laptop';
-          if(searchInput) searchInput.value = query;
+          const query = 'Celulares Samsung';
+          if (searchInput) searchInput.value = query;
           doSearch(query);
         };
       }
@@ -253,30 +253,30 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function executePurchase() {
   const overlay = document.getElementById('successOverlay');
-  if(!overlay) return;
+  if (!overlay) return;
   overlay.style.display = 'flex';
-  
+
   setTimeout(() => {
     overlay.style.display = 'none';
     closeAnalytics();
     const input = document.getElementById('productInput');
-    if(input) input.value = '';
+    if (input) input.value = '';
     const grid = document.getElementById('productsGrid');
-    if(grid) grid.innerHTML = '';
+    if (grid) grid.innerHTML = '';
     const placeholder = document.getElementById('placeholder');
-    if(placeholder) placeholder.style.display = 'flex';
+    if (placeholder) placeholder.style.display = 'flex';
     const status = document.getElementById('resultsStatus');
-    if(status) status.textContent = 'Esperando búsqueda...';
+    if (status) status.textContent = 'Esperando búsqueda...';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 2500);
 }
 
 function createConfetti() {
   const container = document.getElementById('confetti');
-  if(!container) return;
+  if (!container) return;
   container.innerHTML = '';
   const colors = ['#ffd700', '#10b981', '#2563eb', '#f472b6', '#34d399'];
-  for(let i=0; i<50; i++) {
+  for (let i = 0; i < 50; i++) {
     const p = document.createElement('div');
     p.className = 'confetti-piece';
     p.style.left = Math.random() * 100 + '%';
@@ -290,26 +290,26 @@ function createConfetti() {
 // Sobrescribimos executePurchase con las mejoras
 function executePurchase() {
   const overlay = document.getElementById('successOverlay');
-  if(!overlay) return;
-  
+  if (!overlay) return;
+
   // Generar ID de orden y ahorro aleatorio
   document.getElementById('orderId').textContent = '#PM-' + Math.floor(10000 + Math.random() * 90000);
   document.getElementById('orderSaving').textContent = formatPrice(Math.floor(20000 + Math.random() * 80000));
-  
+
   overlay.style.display = 'flex';
   createConfetti();
-  
+
   setTimeout(() => {
     overlay.style.display = 'none';
     closeAnalytics();
     const input = document.getElementById('productInput');
-    if(input) input.value = '';
+    if (input) input.value = '';
     const grid = document.getElementById('productsGrid');
-    if(grid) grid.innerHTML = '';
+    if (grid) grid.innerHTML = '';
     const placeholder = document.getElementById('placeholder');
-    if(placeholder) placeholder.style.display = 'flex';
+    if (placeholder) placeholder.style.display = 'flex';
     const status = document.getElementById('resultsStatus');
-    if(status) status.textContent = 'Esperando b�squeda...';
+    if (status) status.textContent = 'Esperando b�squeda...';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 4500); // 4.5 segundos para disfrutar la victoria
 }
