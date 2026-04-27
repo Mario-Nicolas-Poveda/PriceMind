@@ -548,60 +548,113 @@ footer strong{color:rgba(255,255,255,.8)}
 /* AJUSTES PARA MÓVILES (Optimización Samsung A13 y similares) */
 @media (max-width: 480px) {
   .header-inner {
-    padding: 0.75rem 1rem;
+    padding: 0 1.25rem;
+    gap: 0.5rem;
   }
   
   .logo-sub {
-    display: none; /* Ocultar el lema largo en móvil para ahorrar espacio */
+    display: none; 
   }
   
   .location-badge {
-    padding: 5px 10px;
-    font-size: 0.75rem;
+    padding: 4px 8px;
+    font-size: 0.65rem;
   }
 
   .hero h1 {
-    font-size: 2.2rem; /* Un poco más pequeño para que no toque los bordes */
+    font-size: 2rem;
     line-height: 1.1;
   }
 
   .hero p {
-    font-size: 0.95rem;
-    padding: 0 10px;
+    font-size: 0.9rem;
+    padding: 0 1rem;
   }
 
   .search-section {
-    padding: 0 1rem 2rem;
+    padding: 0 1rem;
+    margin-top: 1.5rem;
   }
 
-  .search-wrapper {
-    gap: 1rem;
+  .search-hero-card {
+    padding: 2rem 1.25rem;
+    border-radius: 24px;
   }
 
-  .search-card {
-    padding: 1.5rem;
+  .hero-input-area {
+    flex-direction: column;
+    border-radius: 20px;
+    padding: 12px;
+    gap: 10px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
   }
 
-  .results-section {
+  .hero-input-wrap {
+    width: 100%;
+  }
+
+  .hero-input-wrap input {
+    padding: 1rem 3.5rem;
+    border: 1px solid var(--gray-200);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  .btn-hero {
+    width: 100%;
     padding: 1rem;
+    height: auto;
+  }
+
+  .discovery-content {
+    padding: 0 1.25rem;
   }
 
   .results-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    text-align: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .results-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
   }
   
+  .discovery-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .reco-container { 
+    margin-top: -20px; 
+    padding: 0 1rem;
+  }
+
+  .reco-card { 
+    flex-direction: row; 
+    text-align: left; 
+    padding: 0.5rem;
+  }
+  
+  .reco-img {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+  }
+
+  .reco-name {
+    font-size: 0.7rem;
+  }
+
   .scanner-content {
     width: 95%;
   }
   
-  .scanner-header h3 {
-    font-size: 0.9rem;
+  footer {
+    padding: 2rem 1.25rem;
   }
-
-  .reco-card { flex-direction: column; text-align: center; }
-  .reco-price-row { justify-content: center; }
 }
 
 /* ANALYTICS CHART STYLES */
