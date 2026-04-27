@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta name="referrer" content="no-referrer">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PriceMind - Comparador Inteligente de Precios</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@400;500&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
+
 <body>
 
   <header>
     <div class="header-inner">
       <a class="logo" href="#">
         <div class="logo-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 6v6l4 2"></path>
+          </svg>
         </div>
         <div>
           <span class="logo-text">PriceMind</span>
@@ -66,7 +74,11 @@
           <div class="input-wrap hero-input-wrap">
             <input type="text" id="productInput" placeholder="¿Qué producto buscas hoy?">
             <button class="camera-btn" id="cameraStartBtn">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z">
+                </path>
+                <circle cx="12" cy="13" r="3"></circle>
+              </svg>
             </button>
           </div>
           <button class="btn btn-primary btn-hero" id="btnProduct">Iniciar Búsqueda</button>
@@ -80,24 +92,28 @@
     <div class="discovery-content">
       <div class="results-header">
         <div class="results-title">Resultados</div>
-        <div id="resultsStatus" class="results-status">Esperando búsqueda...</div>
+        <div id="resultsStatus" class="results-status">Esperando busqueda...</div>
       </div>
       <div class="results-box" id="resultsBox">
         <div class="placeholder" id="placeholder">
           <div class="placeholder-icon">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.8"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.8">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
           </div>
           <div class="placeholder-title">Tus ofertas aparecerán aquí</div>
         </div>
         <div class="loader" id="loader">
-           <div class="spinner"></div>
-           <div class="loader-text">Buscando...</div>
+          <div class="spinner"></div>
+          <div class="loader-text">Buscando...</div>
         </div>
         <div id="productsGrid"></div>
       </div>
-      
+
       <div class="tips-row">
-        <span class="tip-chip">iPhone 15</span><span class="tip-chip">PS5 Slim</span><span class="tip-chip">MacBook</span>
+        <span class="tip-chip">iPhone 15</span><span class="tip-chip">PS5 Slim</span><span
+          class="tip-chip">MacBook</span>
       </div>
 
       <!-- QUIZÁS TE INTERESE -->
@@ -113,7 +129,10 @@
 
   <section class="partners-section">
     <div class="partners-grid">
-      <div class="partner-logo">Mercado Libre</div><div class="partner-logo">Amazon</div><div class="partner-logo">Éxito</div><div class="partner-logo">Falabella</div>
+      <div class="partner-logo">Mercado Libre</div>
+      <div class="partner-logo">Amazon</div>
+      <div class="partner-logo">Éxito</div>
+      <div class="partner-logo">Falabella</div>
     </div>
   </section>
 
@@ -123,7 +142,7 @@
   <div class="scanner-modal" id="analyticsModal">
     <div class="scanner-content split-modal-content">
       <button class="close-scanner-global" onclick="closeAnalytics()">×</button>
-      
+
       <!-- LADO IZQUIERDO: ANALÍTICA -->
       <div class="modal-side-chart">
         <div class="scanner-header">
@@ -141,14 +160,20 @@
             </div>
             <div class="chart-container">
               <div class="chart-grid-lines">
-                <div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div>
+                <div class="grid-line"></div>
+                <div class="grid-line"></div>
+                <div class="grid-line"></div>
+                <div class="grid-line"></div>
+                <div class="grid-line"></div>
               </div>
               <svg id="trendLine" viewBox="0 0 500 200" preserveAspectRatio="none">
-                <path id="chartPath" d="" fill="none" stroke="var(--blue-mid)" stroke-width="3" stroke-linecap="round"/>
-                <path id="chartFill" d="" fill="url(#lineGradient)" opacity="0.1"/>
+                <path id="chartPath" d="" fill="none" stroke="var(--blue-mid)" stroke-width="3"
+                  stroke-linecap="round" />
+                <path id="chartFill" d="" fill="url(#lineGradient)" opacity="0.1" />
                 <defs>
                   <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="var(--blue-mid)"/><stop offset="100%" stop-color="transparent"/>
+                    <stop offset="0%" stop-color="var(--blue-mid)" />
+                    <stop offset="100%" stop-color="transparent" />
                   </linearGradient>
                 </defs>
               </svg>
@@ -168,10 +193,10 @@
         <div class="product-detail-hero">
           <h3 id="anaTitle" class="modal-prod-title">Cargando...</h3>
           <div class="main-img-container">
-             <img src="" id="anaImg" class="split-product-img">
+            <img src="" id="anaImg" class="split-product-img">
           </div>
           <div class="image-gallery" id="anaGallery">
-             <!-- 3 Imágenes aquí -->
+            <!-- 3 Imágenes aquí -->
           </div>
           <div class="split-product-meta">
             <div id="anaStore" class="product-store">Tienda</div>
@@ -192,7 +217,7 @@
           </div>
           <h2 class="animate-text">¡Excelente Elección!</h2>
           <p class="animate-text-slow">Tu pedido ha sido procesado con éxito.</p>
-          
+
           <div class="order-details-card">
             <div class="order-row">
               <span class="order-label">ID de Orden:</span>
@@ -203,7 +228,7 @@
               <span class="order-value" id="orderSaving">$ 45.000 COP</span>
             </div>
           </div>
-          
+
           <div class="success-footer">
             Regresando al inicio en unos segundos...
           </div>
@@ -216,7 +241,9 @@
   <!-- MODAL ESCÁNER -->
   <div class="scanner-modal" id="scannerModal">
     <div class="scanner-content">
-      <div class="scanner-header"><h3>Escáner</h3><button class="close-scanner" id="closeScanner">×</button></div>
+      <div class="scanner-header">
+        <h3>Escáner</h3><button class="close-scanner" id="closeScanner">×</button>
+      </div>
       <div id="reader"></div>
       <div class="scanner-tip" id="scannerTip">Centra el código</div>
     </div>
@@ -224,4 +251,5 @@
 
   <script src="script.js"></script>
 </body>
+
 </html>
