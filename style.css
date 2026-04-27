@@ -923,7 +923,16 @@ footer strong{color:rgba(255,255,255,.8)}
 
 /* ===== MAPA DE TIENDAS ===== */
 .map-section {
-  margin-top: 1.5rem;
+  padding: 0 2rem 2rem;
+  margin-top: 0;
+}
+
+.map-section > .discovery-content > div:not(.map-header):not(.map-legend):not(#storesMap) {
+  /* wrapper reset */
+}
+
+/* Tarjeta interna del mapa */
+.map-section .discovery-content {
   background: white;
   border-radius: 20px;
   border: 1px solid rgba(37, 99, 235, 0.1);
@@ -1041,6 +1050,7 @@ footer strong{color:rgba(255,255,255,.8)}
 
 @media (max-width: 640px) {
   #storesMap { height: 280px; }
+  .map-section { padding: 0 1.25rem 1.5rem; }
   .map-header { padding: 0.85rem 1rem; }
   .map-legend { padding: 0.75rem 1rem; }
   .map-title { font-size: 0.82rem; }
