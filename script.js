@@ -1,4 +1,4 @@
-﻿// --- CONFIGURACIÓN ---
+// --- CONFIGURACIÓN ---
 var currentQuery = '';
 var userLocationData = { city: '', country_name: 'Colombia', country_code: 'CO' };
 
@@ -50,11 +50,85 @@ function renderProducts(items, query) {
   if (!items || items.length === 0) {
     grid.innerHTML = '<div class="error-box"><p>No se encontraron ofertas.</p></div>';
     if (status) status.textContent = 'Sin resultados';
+    hideStoresMap();
     return;
   }
   if (status) status.textContent = items.length + ' ofertas encontradas';
   grid.innerHTML = '<div class="products-grid">' + items.map(item => createProductCard(item)).join('') + '</div>';
+  showStoresMap();
 }
+
+// ===== MAPA FIJO DE TIENDAS EN VALLEDUPAR =====
+const VALLEDUPAR_STORES = [
+  { name: 'Supertienda Olímpica Los Cortijos', lat: 10.4772, lng: -73.2527 },
+  { name: 'Éxito Las Flores Valledupar',        lat: 10.4745, lng: -73.2575 },
+  { name: 'Éxito Valledupar Centro',             lat: 10.4798, lng: -73.2480 },
+  { name: 'Supermercado Mi Futuro Mercado',      lat: 10.4755, lng: -73.2448 },
+  { name: 'Comercializadora Mercabasto',         lat: 10.4703, lng: -73.2598 },
+  { name: 'Supermercado Casimiro Maestre',       lat: 10.4688, lng: -73.2570 },
+  { name: 'Supermercado Los Almendros',          lat: 10.4720, lng: -73.2555 },
+  { name: 'Merkas Valledupar',                   lat: 10.4730, lng: -73.2610 },
+];
+
+var _storesMap = null;
+
+function initStoresMap() {
+  if (_storesMap) return; // ya inicializado
+
+  _storesMap = L.map('storesMap', {
+    center: [10.4740, -73.2535],
+    zoom: 14,
+    zoomControl: true,
+    scrollWheelZoom: false,
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19,
+  }).addTo(_storesMap);
+
+  // Icono rojo personalizado (pin estilo Google Maps)
+  function makeRedIcon(delay) {
+    return L.divIcon({
+      className: '',
+      html: `<div class="store-pin" style="animation-delay:${delay}ms"></div>`,
+      iconSize: [32, 32],
+      iconAnchor: [10, 32],
+      popupAnchor: [6, -34],
+    });
+  }
+
+  VALLEDUPAR_STORES.forEach((store, i) => {
+    L.marker([store.lat, store.lng], { icon: makeRedIcon(i * 80) })
+      .addTo(_storesMap)
+      .bindPopup(`<b style="font-family:'Sora',sans-serif;color:#1a3a6b;">${store.name}</b><br><span style="font-size:0.75rem;color:#64748b;">Valledupar, Colombia</span>`);
+  });
+
+  // Leyenda
+  const legend = document.getElementById('legendItems');
+  if (legend) {
+    legend.innerHTML = VALLEDUPAR_STORES.map(s =>
+      `<div class="legend-chip"><div class="legend-dot"></div>${s.name}</div>`
+    ).join('');
+  }
+}
+
+function showStoresMap() {
+  const section = document.getElementById('mapSection');
+  if (!section) return;
+  section.style.display = 'block';
+  // Inicializar el mapa la primera vez (necesita que el div sea visible)
+  setTimeout(() => {
+    initStoresMap();
+    if (_storesMap) _storesMap.invalidateSize();
+  }, 100);
+}
+
+function hideStoresMap() {
+  const section = document.getElementById('mapSection');
+  if (section) section.style.display = 'none';
+}
+
 
 function createProductCard(item) {
   const itemData = encodeURIComponent(JSON.stringify(item));
