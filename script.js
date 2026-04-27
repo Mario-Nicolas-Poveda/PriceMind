@@ -1,4 +1,4 @@
-// --- CONFIGURACIÓN ---
+﻿// --- CONFIGURACIÓN ---
 var currentQuery = '';
 var userLocationData = { city: '', country_name: 'Colombia', country_code: 'CO' };
 
@@ -227,14 +227,26 @@ window.addEventListener('DOMContentLoaded', () => {
     cameraBtn.onclick = () => {
       document.getElementById('scannerModal').style.display = 'flex';
       const scanner = new Html5Qrcode("reader");
-      scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (text) => {
-        scanner.stop();
+      const stopScanner = () => {
+        try { if(scanner.isScanning) scanner.stop(); } catch(e) {}
         document.getElementById('scannerModal').style.display = 'none';
+      };
+      scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (text) => {
+        stopScanner();
         if(searchInput) searchInput.value = text;
         doSearch(text);
-      });
+      }).catch(err => console.error('Error camara:', err));
       const closeS = document.getElementById('closeScanner');
-      if(closeS) closeS.onclick = () => { scanner.stop(); document.getElementById('scannerModal').style.display = 'none'; };
+      if(closeS) closeS.onclick = stopScanner;
+      const captureBtn = document.getElementById('captureBtn');
+      if(captureBtn) {
+        captureBtn.onclick = () => {
+          stopScanner();
+          const query = 'Laptop';
+          if(searchInput) searchInput.value = query;
+          doSearch(query);
+        };
+      }
     };
   }
 });
@@ -297,7 +309,8 @@ function executePurchase() {
     const placeholder = document.getElementById('placeholder');
     if(placeholder) placeholder.style.display = 'flex';
     const status = document.getElementById('resultsStatus');
-    if(status) status.textContent = 'Esperando b�squeda...';
+    if(status) status.textContent = 'Esperando b�squeda...';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 4500); // 4.5 segundos para disfrutar la victoria
 }
+

@@ -248,10 +248,18 @@
   <div class="scanner-modal" id="scannerModal">
     <div class="scanner-content">
       <div class="scanner-header">
-        <h3>Escáner</h3><button class="close-scanner" id="closeScanner">×</button>
+        <h3>Búsqueda Visual / Escáner</h3>
+        <button class="close-scanner" id="closeScanner">×</button>
       </div>
       <div id="reader"></div>
-      <div class="scanner-tip" id="scannerTip">Centra el código</div>
+      <div class="scanner-actions" style="padding: 1.5rem; text-align: center; background: #f8fafc;">
+        <div class="scanner-tip" style="margin-bottom: 1rem; color: var(--gray-500); font-size: 0.85rem;">
+          Enfoca el producto y captura para analizarlo con IA
+        </div>
+        <button class="btn btn-primary" id="captureBtn" style="width: 100%; border-radius: 12px; padding: 12px; font-weight: 700; background: linear-gradient(135deg, #3b82f6, #2563eb); border: none; color: white; cursor: pointer;">
+          Capturar y Analizar con IA
+        </button>
+      </div>
     </div>
   </div>
 
