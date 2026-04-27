@@ -242,7 +242,7 @@ window.addEventListener('DOMContentLoaded', () => {
       if (captureBtn) {
         captureBtn.onclick = () => {
           stopScanner();
-          const query = 'Celulares Samsung';
+          const query = 'Celular';
           if (searchInput) searchInput.value = query;
           doSearch(query);
         };
